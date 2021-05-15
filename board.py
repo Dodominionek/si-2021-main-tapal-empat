@@ -18,6 +18,8 @@ empty = [
     [0,0,0,0,0],
 ] 
 
+# Połączenia ruchu
+
 move_connections = {
     0: [1, 5, 6], 1: [2, 0, 6], 2: [3, 1, 7, 6, 8], 3: [4, 2, 8], 4: [3, 9, 8],
     5: [6, 10, 0], 6: [7, 5, 11, 1, 10, 2, 12, 0], 7: [8, 6, 12, 2], 8: [9, 7, 13, 3, 12, 4, 14, 2], 9: [8, 14, 4],
@@ -27,6 +29,8 @@ move_connections = {
     18: [19, 17, 23, 13, 22, 14, 24, 12], 19: [18, 24, 14],
     20: [21, 15, 16], 21: [22, 20, 16], 22: [23, 21, 17, 18, 16], 23: [24, 22, 18], 24: [23, 19, 18]
 }
+
+# Połączenia bicia
 
 capture_connections = {
     0: [2, 10, 12], 1: [3, 11], 2: [4, 0, 12, 10, 14], 3: [1, 13], 4: [2, 14, 12],
@@ -41,12 +45,11 @@ class Board:
     def __init__(self):
         self.tigers = []
         self.goats = []
-        # Macierz pól, nie lista!!!
         self.fieldsRows = []
         self.fields = empty
 
+    # Szykowanie planszy (czarne linie i kropki)
     def prepareBoard(self):
-            # pygame.draw.lines(screen, 'black', False, [((x + 1) * 200 / 2, 1000), ((x + 1) * 200 / 2, 1000)], 5)
         for z in range(5):
             pygame.draw.lines(screen, 'black', False, [(100, 100 + (z * 200)), (900, 100 + (z * 200))], 5)
             pygame.draw.lines(screen, 'black', False, [(100 + (z * 200), 100), (100 + (z * 200), 900)], 5)
@@ -63,6 +66,7 @@ class Board:
                 row.append(field)
             self.fieldsRows.append(row)
 
+    # Update planszy - naniesienie ruchów
     def updateBoard(self):
         self.fields = empty
         for tiger in self.tigers:
@@ -74,6 +78,7 @@ class Board:
             pygame.draw.circle(screen, 'grey', [goat.x, goat.y], 30)
             self.fields[math.floor(goat.y / 200)][math.floor(goat.x / 200)] = 2
 
+# Pole - w sumie bez sensu
 class Field:
     def __init__(self, xStart, yStart, xEnd, yEnd, id):
         self.xStart = xStart
@@ -91,6 +96,7 @@ class Field:
     def changeColor(self, col):
         self.color = col
 
+# Tygrys - pozycja i ruch (z biciem)
 class Tiger:
     def __init__(self, x, y):
         self.isBlocked = False
@@ -105,9 +111,10 @@ class Tiger:
                     mouseX, mouseY = pygame.mouse.get_pos()
                     destX = math.floor(mouseX / 100) * 100
                     destY = math.floor(mouseY / 100) * 100
+                    # Sprawdza połączenia
                     for connection in move_connections[math.floor(tigerX / 200) * 5 + math.floor(tigerY / 200)]:
+                        # Match i nie jest między polami - zmienia fields i zamalowuje to co zostało
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
-                            print('Destination Value: ', board.fields[math.floor(destY / 200)][math.floor(destX / 200)])
                             for tiger in board.tigers:
                                 if tiger.x == tigerX and tiger.y == tigerY:
                                     board.fields[math.floor(tigerY / 200)][math.floor(tigerX / 200)] = 0
@@ -116,7 +123,7 @@ class Tiger:
                                     pygame.draw.circle(screen, 'black', [tigerX, tigerY], 30)
                             noCoords = False
 
-
+# Koza - pozycja i ruch (bez bicia)
 class Goat:
     def __init__(self, x, y):
         self.isAlive = True
@@ -131,9 +138,10 @@ class Goat:
                     mouseX, mouseY = pygame.mouse.get_pos()
                     destX = math.floor(mouseX / 100) * 100
                     destY = math.floor(mouseY / 100) * 100
+                    # Sprawdza połączenia
                     for connection in move_connections[math.floor(goatX / 200) * 5 + math.floor(goatY / 200)]:
+                        # Match i nie jest między polami - zmienia fields i zamalowuje to co zostało
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
-                            print('Destination Value: ', board.fields[math.floor(destY / 200)][math.floor(destX / 200)])
                             for goat in board.goats:
                                 if goat.x == goatX and goat.y == goatY:
                                     board.fields[math.floor(goatY / 200)][math.floor(goatX / 200)] = 0
