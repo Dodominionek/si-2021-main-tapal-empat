@@ -10,12 +10,21 @@ myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 screen = pygame.display.set_mode([1500, 1000])
 
+empty = [
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+    [0,0,0,0,0],
+]
+
 class Board:
     def __init__(self):
         self.tigers = []
         self.goats = []
         # Macierz pól, nie lista!!!
         self.fieldsRows = []
+        self.fields = empty
 
     def prepareBoard(self):
             # pygame.draw.lines(screen, 'black', False, [((x + 1) * 200 / 2, 1000), ((x + 1) * 200 / 2, 1000)], 5)
@@ -36,10 +45,13 @@ class Board:
             self.fieldsRows.append(row)
 
     def updateBoard(self):
+        self.fields = empty
         for tiger in self.tigers:
             pygame.draw.circle(screen, 'orange', [tiger.x, tiger.y], 30)
+            self.fields[math.floor(tiger.y / 200)][math.floor(tiger.x / 200)] = 1
         for goat in self.goats:
             pygame.draw.circle(screen, 'grey', [goat.x, goat.y], 30)
+            self.fields[math.floor(goat.y / 200)][math.floor(goat.x / 200)] = 2
 
 class Field:
     def __init__(self, xStart, yStart, xEnd, yEnd, id):
@@ -80,6 +92,7 @@ class Tiger:
                                     field.taken = False
                         for tiger in board.tigers:
                             if tiger.x == tigerX and tiger.y == tigerY:
+                                board.fields[math.floor(tiger.y / 200)][math.floor(tiger.x / 200)] = 0
                                 tiger.x = destX
                                 tiger.y = destY
                                 pygame.draw.circle(screen, 'black', [tigerX, tigerY], 30)
@@ -91,8 +104,26 @@ class Goat:
         self.x = x
         self.y = y
 
-    def makeMove(self, x, y, board):
+    def makeMove(self, goatX, goatY, board):
         noCoords = True
+        while noCoords:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    destX, destY = pygame.mouse.get_pos()
+                    destX = math.floor(destX / 100) * 100
+                    destY = math.floor(destY / 100) * 100
+                    if (destX == goatX or destY == goatY) and (destX % 200 != 0 and destY % 200 != 0) and not (destX == goatX and destY == goatY) and ((abs(destX - goatX) / 200 == 1) or (abs(destY - goatY) / 200 == 1)):
+                        for fieldRow in board.fieldsRows:
+                            for field in fieldRow:
+                                if (field.xStart + field.xEnd) / 2 == goatX and (field.yStart + field.yEnd) / 2 == goatY:
+                                    field.taken = False
+                        for goat in board.goats:
+                            if goat.x == goatX and goat.y == goatY:
+                                board.fields[math.floor(goat.y / 200)][math.floor(goat.x / 200)] = 0
+                                goat.x = destX
+                                goat.y = destY
+                                pygame.draw.circle(screen, 'black', [goatX, goatY], 30)
+                        noCoords = False
 
 board = Board()
 
@@ -139,8 +170,6 @@ while running:
             # board.prepareBoard()
 
             x, y = pygame.mouse.get_pos()
-            # for row in board.fieldsRows:
-            #     for field in row:
             if x > 100 and x < 1100 and y > 100 and y < 1100:
                 if (math.floor(x / 100) * 100) % 200 != 0 and (math.floor(y / 100) * 100) % 200 != 0:
                     for row in board.fieldsRows:
@@ -159,7 +188,6 @@ while running:
                                             print('Tygrysy zrobiły ruch')
                                             text = 'Tygrysy zrobiły ruch'
                                             tigersMove = False
-                                            field.taken = True
                                 elif addingGoats == True and field.taken == False:
                                     print('Kozy rozstawiły')
                                     text = 'Kozy rozstawiły '  + str(len(board.goats) + 1)
@@ -169,11 +197,15 @@ while running:
                                     if len(board.goats) >= 1 :
                                         tigersMove = True
                                 elif tigersMove == False and addingTigers == False:
-                                    print('Kozy zrobiły ruch')
-                                    text = 'Kozy zrobiły ruch'
-                                    tigersMove = True
-                                    field.taken = True
+                                    for goat in board.goats:
+                                        if math.floor(x / 100) * 100 == goat.x and math.floor(y / 100) * 100 == goat.y:
+                                            goat.makeMove(goat.x, goat.y, board)
+                                            print('Kozy zrobiły ruch')
+                                            text = 'Kozy zrobiły ruch'
+                                            tigersMove = True
                 board.updateBoard()
+                print(len(board.goats))
+                print(board.fields)
             screen.blit(textsurface,(0,0))
         
                                 
