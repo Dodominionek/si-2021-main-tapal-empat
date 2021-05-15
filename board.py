@@ -74,13 +74,15 @@ class Tiger:
                     destX = math.floor(destX / 100) * 100
                     destY = math.floor(destY / 100) * 100
                     if (destX == tigerX or destY == tigerY) and (destX % 200 != 0 and destY % 200 != 0) and not (destX == tigerX and destY == tigerY):
-                        for fieldRow in board:
+                        for fieldRow in board.fieldsRows:
                             for field in fieldRow:
-                                if (field.xStart + field.xEnd) / 2 == math.floor(tigerX / 100) * 100 and (field.yStart + field.yEnd) / 2 == math.floor(tigerY / 100) * 100:
+                                if (field.xStart + field.xEnd) / 2 == tigerX and (field.yStart + field.yEnd) / 2 == tigerY:
                                     field.taken = False
-                        pygame.draw.circle(screen, 'orange', [tigerX, tigerY], 30)
-                        pygame.draw.circle(screen, 'orange', [destX, destY], 30)
-                        pygame.display.flip()
+                        for tiger in board.tigers:
+                            if tiger.x == tigerX and tiger.y == tigerY:
+                                tiger.x = destX
+                                tiger.y = destY
+                                pygame.draw.circle(screen, 'black', [tigerX, tigerY], 30)
                         noCoords = False
 
 class Goat:
@@ -153,7 +155,7 @@ while running:
                                 elif tigersMove == True:
                                     for tiger in board.tigers:
                                         if math.floor(x / 100) * 100 == tiger.x and math.floor(y / 100) * 100 == tiger.y:
-                                            tiger.makeMove(tiger.x, tiger.y, board.fieldsRows)
+                                            tiger.makeMove(tiger.x, tiger.y, board)
                                             print('Tygrysy zrobiły ruch')
                                             text = 'Tygrysy zrobiły ruch'
                                             tigersMove = False
