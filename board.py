@@ -147,6 +147,12 @@ def isInsideSquare(x, y):
     else:
         return False
 
+def goatLost(goatX, goatY):
+    for goat in board.goats:
+        if goat.x == goatX and goat.y == goatY:
+            board.goats.remove(goat)
+            board.fields[goat.x][goat.y] = 0
+
 while running:
     textsurface = myfont.render(text, False, (0, 0, 0))
     screen.blit(textsurface,(0,0))
@@ -204,8 +210,8 @@ while running:
                                             text = 'Kozy zrobiły ruch'
                                             tigersMove = True
                 board.updateBoard()
-                print(len(board.goats))
-                print(board.fields)
+                for row in board.fields:
+                    print(row)
             screen.blit(textsurface,(0,0))
         
                                 
