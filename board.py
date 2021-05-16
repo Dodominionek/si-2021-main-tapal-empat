@@ -30,6 +30,34 @@ move_connections = {
     20: [21, 15, 16], 21: [22, 20, 16], 22: [23, 21, 17, 18, 16], 23: [24, 22, 18], 24: [23, 19, 18]
 }
 
+move_tigers_connections = {
+    0: [5, 10, 15, 20, 1, 2, 3, 4, 6, 12, 18, 24],
+    1: [0, 6, 11, 16, 21, 2, 3, 4],
+    2: [0, 1, 3, 4, 6, 10, 8, 14, 7, 12, 17, 23],
+    3: [0, 1, 2, 4, 8, 13, 18, 23],
+    4: [0, 1, 2, 3, 8, 12, 16, 20, 9, 14, 19, 24],
+    5: [0, 10, 15, 20, 6, 7, 8, 9],
+    6: [5, 0, 10, 1, 2, 7, 8, 9, 11, 16, 21, 12, 18, 24],
+    7: [2, 5, 6, 12, 17, 22, 8, 9],
+    8: [2, 3, 4, 9, 14, 13, 18, 23, 12, 16, 20, 5, 6, 7],
+    9: [4, 5, 6, 7, 8, 9, 14, 19, 24],
+    10: [0, 5, 6, 2, 11, 12, 13, 14, 16, 22, 15, 20],
+    11: [10, 1, 6, 12, 13, 14, 16, 21],
+    12: [0, 6, 2, 7, 4, 8, 13, 14, 18, 24, 17, 22, 16, 20, 10, 11],
+    13: [3, 8, 14, 18, 23, 10, 11, 12],
+    14: [4, 9, 2, 8, 10, 11, 12, 13, 18, 22, 19, 24],
+    15: [0, 5, 10, 16, 17, 18, 19, 20],
+    16: [10, 1, 6, 11, 4, 8, 12, 17, 18, 19, 22, 21, 20, 15],
+    17: [15, 16, 2, 7, 12, 18, 19, 22],
+    18: [0, 6, 12, 3, 8, 13, 14, 19, 24, 23, 22, 15, 16, 17],
+    19: [4, 9, 14, 24, 15, 16, 17, 18],
+    20: [0, 5, 10, 15, 4, 8, 12, 16, 21, 22, 23, 24],
+    21: [20, 1, 6, 11, 16, 22, 23, 24],
+    22: [20, 21, 10, 16, 2, 7, 12, 17, 14, 18, 23, 24],
+    23: [20, 21, 22, 3, 8, 13, 18, 24],
+    24: [20, 21, 22, 23, 0, 6, 12, 18, 4, 9, 14, 19],
+}
+
 # Połączenia bicia
 
 capture_connections = {
@@ -112,6 +140,35 @@ textGoats = 'Dostepne kozy: ' +  str(len(board.goats))
 
 textGoatsLost = 'Stracone kozy: ' + str(lostGoats)
 
+def checkRoad(destX, destY, tigerX, tigerY, board):
+    tempX = destX
+    tempY = destY
+    while tempX != tigerX or tempY != tigerY:
+        if destY == tigerY and destX > tigerX:
+            tempX = tempX - 200
+        elif destY == tigerY and destX < tigerX:
+            tempX = tempX + 200
+        elif destX == tigerX and destY < tigerY:
+            tempY = tempY + 200
+        elif destX == tigerX and destY > tigerY:
+            tempY = tempY - 200
+        elif destX > tigerX and destY > tigerY:
+            tempX = tempX - 200
+            tempY = tempY - 200
+        elif destX < tigerX and destY > tigerY:
+            tempX = tempX + 200
+            tempY = tempY - 200
+        elif destX > tigerX and destY < tigerY:
+            tempX = tempX - 200
+            tempY = tempY + 200
+        elif destX < tigerX and destY < tigerY:
+            tempX = tempX + 200
+            tempY = tempY + 200
+        if board.fields[math.floor(tempY / 200)][math.floor(tempX / 200)] == 2:
+            return False
+    return True
+
+
 # Tygrys - pozycja i ruch (z biciem)
 class Tiger:
     def __init__(self, x, y):
@@ -128,16 +185,17 @@ class Tiger:
                     destX = math.floor(mouseX / 100) * 100
                     destY = math.floor(mouseY / 100) * 100
                     # Sprawdza połączenia
-                    for connection in move_connections[math.floor(tigerX / 200) * 5 + math.floor(tigerY / 200)]:
+                    for connection in move_tigers_connections[math.floor(tigerX / 200) * 5 + math.floor(tigerY / 200)]:
                         # Match i nie jest między polami - zmienia fields i zamalowuje to co zostało
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
-                            for tiger in board.tigers:
-                                if tiger.x == tigerX and tiger.y == tigerY:
-                                    board.fields[math.floor(tigerY / 200)][math.floor(tigerX / 200)] = 0
-                                    tiger.x = destX
-                                    tiger.y = destY
-                                    pygame.draw.circle(screen, 'black', [tigerX, tigerY], 30)
-                            noCoords = False   
+                            if checkRoad(destX, destY, tigerX, tigerY, board) == True:
+                                for tiger in board.tigers:
+                                    if tiger.x == tigerX and tiger.y == tigerY:
+                                        board.fields[math.floor(tigerY / 200)][math.floor(tigerX / 200)] = 0
+                                        tiger.x = destX
+                                        tiger.y = destY
+                                        pygame.draw.circle(screen, 'black', [tigerX, tigerY], 30)
+                                noCoords = False   
                     for cap_connection in capture_connections[math.floor(tigerX / 200) * 5 + math.floor(tigerY / 200)]:
                         if cap_connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
                             if board.fields[math.floor((destY + tigerY) / 2 / 200)][math.floor((destX + tigerX) / 2 / 200)] == 2:
