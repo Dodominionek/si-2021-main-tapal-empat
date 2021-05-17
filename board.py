@@ -152,12 +152,16 @@ addingTigers = True
 addingGoats = False
 tigersMove = False
 addedGoats = 0
+leftGoats = 18
 lostGoats = 0
-textGoatsDeployed = 'Rozstawione kozy: ' + str(addedGoats)
 
-textGoats = 'Dostepne kozy: ' +  str(len(board.goats))
+textGoatsLeft = 'Pozostałe kozy: ' + str(leftGoats - addedGoats)
 
-textGoatsLost = 'Stracone kozy: ' + str(lostGoats)
+textGoatsDeployed = 'Wykorzystane kozy: ' + str(addedGoats)
+
+textGoats = 'Kozy na planszy: ' +  str(len(board.goats))
+
+textGoatsLost = 'Stracone kozy: ' + str(addedGoats - len(board.goats))
 
 def checkRoad(destX, destY, tigerX, tigerY, board):
     tempX = destX
@@ -290,10 +294,15 @@ class Game():
     while running:
         textsurface = myfont.render(text, False, (0, 0, 0))
         screen.blit(textsurface,(0,0))
-        textGoatsSurface = myfont.render(textGoats, False, (0, 0, 0))
-        screen.blit(textGoatsSurface,(1000,0))
+        textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (0, 0, 0))
+        screen.blit(textGoatsLeftSurface,(1000,0))
         textGoatsDeployedSurface = myfont.render(textGoatsDeployed, False, (0, 0, 0))
-        screen.blit(textGoatsDeployedSurface,(1000,100))
+        screen.blit(textGoatsDeployedSurface,(1000,50))
+        textGoatsSurface = myfont.render(textGoats, False, (0, 0, 0))
+        screen.blit(textGoatsSurface,(1000,100))
+        textGoatsLostSurface = myfont.render(textGoatsLost, False, (0, 0, 0))
+        screen.blit(textGoatsLostSurface,(1000,150))
+        
 
         for event in pygame.event.get():
             if len(board.tigers) >= 2:
@@ -311,10 +320,16 @@ class Game():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 textsurface = myfont.render(text, False, (255, 255, 255))
                 screen.blit(textsurface,(0,0))
-                textGoatsSurface = myfont.render(textGoats, False, (255, 255, 255))
-                screen.blit(textGoatsSurface,(1000,0))
+                textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (255, 255, 255))
+                screen.blit(textGoatsLeftSurface,(1000,0))
                 textGoatsDeployedSurface = myfont.render(textGoatsDeployed, False, (255, 255, 255))
-                screen.blit(textGoatsDeployedSurface,(1000,100))
+                screen.blit(textGoatsDeployedSurface,(1000,50))
+                textGoatsSurface = myfont.render(textGoats, False, (255, 255, 255))
+                screen.blit(textGoatsSurface,(1000,100))
+                textGoatsLostSurface = myfont.render(textGoatsLost, False, (255, 255, 255))
+                screen.blit(textGoatsLostSurface,(1000,150))
+
+
 
                 x, y = pygame.mouse.get_pos()
                 x = x + 50
@@ -338,7 +353,7 @@ class Game():
                                                 tigersMove = False
                                     elif addingGoats == True and board.fields[math.floor(y / 200)][math.floor(x / 200)] == 0:
                                         print('Kozy rozstawiły')
-                                        text = 'Kozy rozstawiły '  + str(len(board.goats) + 1)
+                                        text = 'Kozy rozstawiły '
                                         board.goats.append(Goat(math.floor(x / 100) * 100, math.floor(y / 100) * 100))
                                         pygame.draw.circle(screen, color, [math.floor(x / 100) * 100, math.floor(y / 100) * 100], 30)
                                         if len(board.goats) >= 1 :
@@ -356,15 +371,20 @@ class Game():
                     board.updateBoard()
                     for row in board.fields:
                         print(row)
-                textGoats = 'Dostepne kozy: ' +  str(len(board.goats))
-                textGoatsDeployed = 'Rozstawione kozy: ' + str(addedGoats)
+                textGoats = 'Kozy na planszy: ' +  str(len(board.goats))
+                textGoatsDeployed = 'Wykorzystane kozy: ' + str(addedGoats)
+                textGoatsLost = 'Stracone kozy: ' + str(addedGoats - len(board.goats))
+                textGoatsLeft = 'Pozostałe kozy: ' + str(leftGoats - addedGoats)
                 if addedGoats == 18 and len(board.goats) <= 10:
                         text = 'Tygrysy wygraly!'
                 if checkIfTigersBlocked() == True and len(board.tigers) == 2:
                     text = 'Kozy wygraly!'
+                
                 screen.blit(textsurface,(0,0))
-                screen.blit(textGoatsSurface,(1000,0))
-                screen.blit(textGoatsDeployedSurface,(1000,100))
+                screen.blit(textGoatsLeftSurface,(1000,0))
+                screen.blit(textGoatsDeployedSurface,(1000,50))
+                screen.blit(textGoatsSurface,(1000,100))
+                screen.blit(textGoatsLostSurface,(1000,150))
             
                                     
 
