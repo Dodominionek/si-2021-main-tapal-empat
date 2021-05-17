@@ -245,7 +245,6 @@ class Goat:
                     mouseX, mouseY = pygame.mouse.get_pos()
                     destX = math.floor(mouseX / 100) * 100
                     destY = math.floor(mouseY / 100) * 100
-                    # Sprawdza połączenia
                     for connection in move_goats_connections[math.floor(goatX / 200) * 5 + math.floor(goatY / 200)]:
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
                             for goat in board.goats:
@@ -277,7 +276,6 @@ def goatLost(goatX, goatY):
 def checkIfTigersBlocked():
     for tiger in board.tigers:
         for neigbour in block_checker[math.floor(tiger.y / 200) * 5 + math.floor(tiger.x / 200)]:
-            print(neigbour)
             if board.fields[math.floor(neigbour / 5)][neigbour % 5] == 0:
                 return False
     return True   
@@ -337,9 +335,9 @@ class Game():
                                         pygame.draw.circle(screen, color, [math.floor(x / 100) * 100, math.floor(y / 100) * 100], 30)
                                         if len(board.goats) >= 1 :
                                             tigersMove = True
-                                        addedGoats += 1
                                         if addedGoats == 18:
                                             addingGoats = False
+                                        addedGoats += 1
                                     elif tigersMove == False and addingTigers == False and addingGoats == False:
                                         for goat in board.goats:
                                             if math.floor(x / 100) * 100 == goat.x and math.floor(y / 100) * 100 == goat.y:
@@ -352,13 +350,13 @@ class Game():
                         print(row)
                 textGoats = 'Dostepne kozy: ' +  str(len(board.goats))
                 textGoatsDeployed = 'Rozstawione kozy: ' + str(addedGoats)
-                screen.blit(textsurface,(0,0))
-                screen.blit(textGoatsSurface,(1000,0))
-                screen.blit(textGoatsDeployedSurface,(1000,100))
                 if addedGoats == 18 and len(board.goats) <= 10:
                         text = 'Tygrysy wygraly!'
                 if checkIfTigersBlocked() == True:
                     text = 'Kozy wygraly!'
+                screen.blit(textsurface,(0,0))
+                screen.blit(textGoatsSurface,(1000,0))
+                screen.blit(textGoatsDeployedSurface,(1000,100))
             
                                     
 
