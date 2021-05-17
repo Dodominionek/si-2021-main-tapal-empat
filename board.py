@@ -20,7 +20,7 @@ empty = [
 
 # Połączenia ruchu
 
-move_connections = {
+move_goats_connections = {
     0: [1, 5, 6], 1: [2, 0, 6], 2: [3, 1, 7, 6, 8], 3: [4, 2, 8], 4: [3, 9, 8],
     5: [6, 10, 0], 6: [7, 5, 11, 1, 10, 2, 12, 0], 7: [8, 6, 12, 2], 8: [9, 7, 13, 3, 12, 4, 14, 2], 9: [8, 14, 4],
     10: [11, 15, 5, 6, 16], 11: [12, 10, 16, 6], 12: [13, 11, 17, 7, 16, 8, 18, 6], 13: [14, 12, 18, 8],
@@ -67,6 +67,34 @@ capture_connections = {
     13: [11, 23, 3], 14: [12, 24, 4, 22, 2],
     15: [17, 5], 16: [18, 6, 8], 17: [19, 15, 7], 18: [16, 8, 6], 19: [17, 9],
     20: [22, 10, 12], 21: [23, 11], 22: [24, 20, 12, 14, 10], 23: [21, 13], 24: [22, 14, 12]
+}
+
+block_checker = {
+    0: [5, 10, 6, 12, 1, 2],
+    1: [0, 6, 11, 2, 3],
+    2: [0, 1, 6, 10, 7, 12, 8, 14, 3, 4],
+    3: [1, 2, 8, 13, 4],
+    4: [2, 3, 8, 12, 9, 14],
+    5: [0, 6, 7, 10, 15],
+    6: [0, 5, 10, 1, 11, 16, 2, 7, 8, 12, 18],
+    7: [5, 6, 2, 12, 17, 8, 9],
+    8: [2, 6, 7, 12, 16, 3, 13, 18, 4, 9, 14],
+    9: [7, 8, 4, 14, 19],
+    10: [0, 5, 15, 20, 2, 6, 16, 22, 11, 12],
+    11: [10, 1, 6, 16, 21, 12, 13],
+    12: [0, 6, 10, 11, 20, 16, 2, 7, 17, 22, 4, 8, 13, 14, 18, 24],
+    13: [11, 12, 3, 8, 18, 23, 14],
+    14: [2, 8, 12, 13, 18, 22, 4, 9, 19, 24],
+    15: [5, 10, 20, 16, 17],
+    16: [10, 15, 20, 6, 11, 21, 12, 8, 17, 18, 22],
+    17: [15, 16, 7, 12, 22, 18, 19],
+    18: [6, 12, 16, 17, 22, 8, 13, 23, 14, 19, 24],
+    19: [17, 18, 9, 14, 24],
+    20: [10, 15, 16, 12, 21, 22],
+    21: [20, 11, 16, 22, 23],
+    22: [20, 21, 10, 16, 12, 17, 14, 18, 23, 24],
+    23: [21, 22, 13, 18, 24],
+    24: [22, 23, 12, 18, 14, 19],
 }
 
 class Board:
@@ -144,6 +172,8 @@ def checkRoad(destX, destY, tigerX, tigerY, board):
     tempX = destX
     tempY = destY
     while tempX != tigerX or tempY != tigerY:
+        if board.fields[math.floor(tempY / 200)][math.floor(tempX / 200)] == 1:
+            return False
         if destY == tigerY and destX > tigerX:
             tempX = tempX - 200
         elif destY == tigerY and destX < tigerX:
@@ -230,7 +260,7 @@ class Goat:
                     destX = math.floor(mouseX / 100) * 100
                     destY = math.floor(mouseY / 100) * 100
                     # Sprawdza połączenia
-                    for connection in move_connections[math.floor(goatX / 200) * 5 + math.floor(goatY / 200)]:
+                    for connection in move_goats_connections[math.floor(goatX / 200) * 5 + math.floor(goatY / 200)]:
                         # Match i nie jest między polami - zmienia fields i zamalowuje to co zostało
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
                             for goat in board.goats:
@@ -258,6 +288,14 @@ def goatLost(goatX, goatY):
         if goat.x == goatX and goat.y == goatY:
             board.goats.remove(goat)
             board.fields[goat.x][goat.y] = 0
+
+def checkIfTigersBlocked():
+    for tiger in board.tigers:
+        for neigbour in block_checker[math.floor(tiger.y / 200) * 5 + math.floor(tiger.x / 200)]:
+            print(neigbour)
+            if board.fields[math.floor(neigbour / 5)][neigbour % 5] == 0:
+                return False
+    return True   
 
 while running:
     textsurface = myfont.render(text, False, (0, 0, 0))
@@ -330,13 +368,17 @@ while running:
                 board.updateBoard()
                 for row in board.fields:
                     print(row)
-                if addedGoats == 18 and len(board.goats) <= 10:
-                    text = 'Tygrysy wygraly!'
             textGoats = 'Dostepne kozy: ' +  str(len(board.goats))
             textGoatsDeployed = 'Rozstawione kozy: ' + str(addedGoats)
             screen.blit(textsurface,(0,0))
             screen.blit(textGoatsSurface,(1000,0))
             screen.blit(textGoatsDeployedSurface,(1000,100))
+            if addedGoats == 18 and len(board.goats) <= 10:
+                    text = 'Tygrysy wygraly!'
+                    # running = False
+            if checkIfTigersBlocked() == True:
+                text = 'Kozy wygraly!'
+                # running = False
             # screen.blit(textGoatsLostSurface,(1000,200))
         
                                 
