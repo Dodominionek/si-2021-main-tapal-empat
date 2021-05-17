@@ -352,7 +352,7 @@ class Game():
                 textGoatsDeployed = 'Rozstawione kozy: ' + str(addedGoats)
                 if addedGoats == 18 and len(board.goats) <= 10:
                         text = 'Tygrysy wygraly!'
-                if checkIfTigersBlocked() == True:
+                if checkIfTigersBlocked() == True and len(board.tigers) == 2:
                     text = 'Kozy wygraly!'
                 screen.blit(textsurface,(0,0))
                 screen.blit(textGoatsSurface,(1000,0))
