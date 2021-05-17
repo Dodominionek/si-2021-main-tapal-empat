@@ -201,8 +201,11 @@ class Tiger:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouseX, mouseY = pygame.mouse.get_pos()
-                    destX = math.floor(mouseX / 100) * 100
-                    destY = math.floor(mouseY / 100) * 100
+                    mouseX = mouseX + 50
+                    mouseY = mouseY + 50
+
+                    destX = math.floor((mouseX) / 100) * 100
+                    destY = math.floor((mouseY) / 100) * 100
                     # Sprawdza połączenia
                     for connection in move_tigers_connections[math.floor(tigerX / 200) * 5 + math.floor(tigerY / 200)]:
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
@@ -243,6 +246,9 @@ class Goat:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouseX, mouseY = pygame.mouse.get_pos()
+                    mouseX = mouseX + 50
+                    mouseY = mouseY + 50
+
                     destX = math.floor(mouseX / 100) * 100
                     destY = math.floor(mouseY / 100) * 100
                     for connection in move_goats_connections[math.floor(goatX / 200) * 5 + math.floor(goatY / 200)]:
@@ -311,6 +317,8 @@ class Game():
                 screen.blit(textGoatsDeployedSurface,(1000,100))
 
                 x, y = pygame.mouse.get_pos()
+                x = x + 50
+                y = y + 50
                 if x > 100 and x < 1100 and y > 100 and y < 1100:
                     if (math.floor(x / 100) * 100) % 200 != 0 and (math.floor(y / 100) * 100) % 200 != 0:
                         for row in board.fieldsRows:
