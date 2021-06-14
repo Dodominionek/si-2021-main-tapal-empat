@@ -77,19 +77,10 @@ def make_move_tiger(board, posY, posX, destY, destX):
     possible_move = False
     for capture_move in capture_connections[posX * 5 + posY]:
         if capture_move == destX * 5 + destY and board[destY][destX] == 0 and board[int((destY + posY) / 2)][int((destX + posX) / 2)] == 2:
-            # board[posY][posX] = 0
-            # board[int((destY + posY) / 2)][int((destX + posX) / 2)] = 0
-            # posX = destX
-            # posY = destY
-            # board[posY][posX] = 1
             possible_move = True
 
     for normal_move in move_tigers_connections[posX * 5 + posY]:
         if normal_move == destX * 5 + destY and board[destY][destX] == 0 and checkRoad(board, posX, posY, destX, destY) == True:
-            # board[posY][posX] = 0
-            # posX = destX
-            # posY = destY
-            # board[posY][posX] = 1
             possible_move = True
 
     return possible_move
@@ -128,17 +119,22 @@ def make_move_goat(board, posY, posX, destY, destX):
     possible_move = False
     for normal_move in move_goats_connections[posX * 5 + posY]:
         if normal_move == destX * 5 + destY and board[destY][destX] == 0:
-            # board[posY][posX] = 0
-            # posX = destX
-            # posY = destY
-            # board[posY][posX] = 2
             possible_move = True
     return possible_move
 
+def checkIfTigersBlocked(board):
+    for x in range(5):
+        for y in range(5):
+            if board[y][x] == 1:
+                for neighbour in block_checker[x * 5 + y]:
+                    if board[int(neighbour / 5)][int(neighbour % 5)] == 0:
+                        return False
+    return True   
+
 board = [
-    [0,1,0,0,0],
-    [0,1,2,0,0],
-    [0,2,0,0,0],
+    [1,2,0,0,0],
+    [2,2,2,0,0],
+    [2,2,2,0,0],
     [0,0,0,0,0],
     [0,0,0,0,0],
 ]
@@ -159,29 +155,18 @@ def get_possible_moves_goat(board, posX, posY):
                 possible.append([x, y])
     return possible
 
-print(get_possible_moves_tiger(board, 0, 1))
+def getPossibleGoatPlaces(board):
+    possibleGoatPlaces = []
+    for x in range(5):
+        for y in range(5):
+            if board[y][x] == 0:
+                possibleGoatPlaces.append([y, x])
+    return possibleGoatPlaces
+
+print(get_possible_moves_tiger(board, 0, 0))
 
 print(get_possible_moves_goat(board, 1, 2))
 
+print(checkIfTigersBlocked(board))
 
-# for row in board:
-#     print(row)
-
-# # plansza, numer wiersza zwierzęcia, numer kolumny zwierzęcia, numer wiersza docelowy, numer kolumny docelowy, liczone od 0
-# make_move_tiger(board, 0, 1, 0, 3)
-
-# print()
-# for row in board:
-#     print(row)
-    
-# make_move_tiger(board, 1, 1, 3, 1)
-
-# print()
-# for row in board:
-#     print(row)
-
-# make_move_goat(board, 1, 2, 1, 0)
-
-# print()
-# for row in board:
-#     print(row)
+print(getPossibleGoatPlaces(board))
