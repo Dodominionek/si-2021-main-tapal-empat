@@ -163,6 +163,14 @@ def getPossibleGoatPlaces(board):
                 possibleGoatPlaces.append([y, x])
     return possibleGoatPlaces
 
+def getPossibleTigerPlaces(board):
+    possibleTigerPlaces = []
+    for x in range(5):
+        for y in range(5):
+            if board[y][x] == 0 and x > 0 and y > 0 and x < 4 and y < 4:
+                possibleTigerPlaces.append([y, x])
+    return possibleTigerPlaces
+
 print(get_possible_moves_tiger(board, 0, 0))
 
 print(get_possible_moves_goat(board, 1, 2))
@@ -170,3 +178,5 @@ print(get_possible_moves_goat(board, 1, 2))
 print(checkIfTigersBlocked(board))
 
 print(getPossibleGoatPlaces(board))
+
+print(getPossibleTigerPlaces(board))
