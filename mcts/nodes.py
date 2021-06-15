@@ -1,6 +1,7 @@
 import numpy as np
 from collections import defaultdict
 from game import *
+from state import GameState
 
 class MonteCarloTreeSearchNode(object):
     def __init__(self, state: GameState, parent=None):

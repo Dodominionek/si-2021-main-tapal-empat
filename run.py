@@ -6,28 +6,12 @@ from mcts.nodes import *
 from mcts.search import MonteCarloTreeSearch
 from pygame.scrap import lost, put
 from game import *
+from state import *
 
-pygame.init()
-pygame.font.init()
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
-screen = pygame.display.set_mode([1500, 1000])
-
-class State(object):
-    def __init__(self):
-        self.addingTigers = True
-        self.addingGoats = False
-        self.tigersMove = False
-        self.addedGoats = 0
-        self.leftGoats = 18
-        self.lostGoats = 0
-        self.board = [
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-            [0,0,0,0,0],
-        ]
-
+# pygame.init()
+# pygame.font.init()
+# myfont = pygame.font.SysFont('Comic Sans MS', 30)
+# screen = pygame.display.set_mode([1500, 1000])
 
 def init():
     state = State()
@@ -37,7 +21,7 @@ def init():
     mcts = MonteCarloTreeSearch(root)
     best_node = mcts.best_action(100)
     c_state = best_node.state
-    c_board = c_state.board
+    c_board = c_state.state.board
     return c_state, c_board
 
 def get_action(state):
@@ -81,7 +65,7 @@ while True:
     c_board = c_state.board
     print(c_board)
 
-    board_state = GameState(state=c_board, next_to_move=1)
+    board_state = GameState(state=c_state, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
     best_node = mcts.best_action(1000)
