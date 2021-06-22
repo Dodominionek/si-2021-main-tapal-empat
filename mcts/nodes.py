@@ -41,14 +41,8 @@ class MonteCarloTreeSearchNode(object):
     def rollout(self):
         current_rollout_state = self.state
         while not current_rollout_state.is_game_over():
-
-            # print("Call get legal actions")
             possible_moves = current_rollout_state.get_legal_actions()
-
-            # print("Call rollout policy")
             action = self.rollout_policy(possible_moves)
-
-            # print("Call move")
             current_rollout_state = current_rollout_state.move(action)
         return current_rollout_state.game_result
 
@@ -66,7 +60,7 @@ class MonteCarloTreeSearchNode(object):
             (c.q / (c.n)) + c_param * np.sqrt((2 * np.log(self.n) / (c.n)))
             for c in self.children
         ]
-        print(choices_weights)
+        # print(choices_weights)
         return self.children[np.argmax(choices_weights)]
 
     def rollout_policy(self, possible_moves):

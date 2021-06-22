@@ -8,11 +8,6 @@ from pygame.scrap import lost, put
 from game import *
 from state import *
 
-# pygame.init()
-# pygame.font.init()
-# myfont = pygame.font.SysFont('Comic Sans MS', 30)
-# screen = pygame.display.set_mode([1500, 1000])
-
 def init():
     state = State()
 
@@ -23,20 +18,14 @@ def init():
 
     root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    
-    # print(initial_board_state.state.board)
-    # print(root.state.state.board)
-    # print(mcts.root.state.state.board)
 
-    # print("Call best action")
-    best_node = mcts.best_action(1)
+    best_node = mcts.best_action(10)
     c_state = best_node.state
-    # c_board = c_state.state.board
 
     board_state = GameState(state=c_state.state, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(1)
+    best_node = mcts.best_action(10)
     c_state = best_node.state
 
     return c_state
@@ -87,7 +76,6 @@ def judge(state):
 
 c_state = init()
 # , c_board
-# print(c_board)
 print("Po ruchach")
 c_state.state.print()
 
@@ -96,18 +84,15 @@ while True:
     move1 = get_action(c_state)
     c_state = c_state.move(move1)
     # c_board = c_state.state.board
-    # print(c_board)
     c_state.state.print()
 
     board_state = GameState(state=c_state.state, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(1)
+    best_node = mcts.best_action(10)
     c_state = best_node.state
 
     # c_board = c_state.state.board
-    # print(c_board)
-    # print("Gra")
     c_state.state.print()
     if judge(c_state)==1:
         break
