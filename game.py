@@ -29,6 +29,8 @@ class GameState(object):
     def game_result(self):
         # check if game is over
         status = self.state.check_status()
+        # print("Game status")
+        # print(status)
         if status == 1:
             return 1.
         elif status == -1:
@@ -50,7 +52,7 @@ class GameState(object):
         new_state = copy.deepcopy(self.state)
         #rozstawianie
         if self.state.addingTigers > 0:
-            new_state, succed = self.state.add_tiger(new_state, move.pos_from[0], move.pos_from[1])
+            new_state, succed = self.state.add_tiger(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
                 raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
             if new_state.addingTigers > 0:
@@ -60,7 +62,7 @@ class GameState(object):
             return GameState(new_state, next_to_move, move)
 
         elif self.state.addingGoats == True and self.next_to_move == GameState.P2:
-            new_state, succed = self.state.add_tiger(new_state, move.pos_from[0], move.pos_from[1])
+            new_state, succed = self.state.add_goat(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
                 raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
             next_to_move = GameState.P1

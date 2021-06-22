@@ -17,26 +17,56 @@ def init():
     state = State()
 
     initial_board_state = GameState(state=state, next_to_move=1)
+
+    print("Poczatkowy")
+    state.print()
+
     root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(100)
+    
+    # print(initial_board_state.state.board)
+    # print(root.state.state.board)
+    # print(mcts.root.state.state.board)
+
+    # print("Call best action")
+    best_node = mcts.best_action(1)
     c_state = best_node.state
-    c_board = c_state.state.board
-    return c_state, c_board
+    # c_board = c_state.state.board
+
+    board_state = GameState(state=c_state.state, next_to_move=1)
+    root = MonteCarloTreeSearchNode(state=board_state, parent=None)
+    mcts = MonteCarloTreeSearch(root)
+    best_node = mcts.best_action(1)
+    c_state = best_node.state
+
+    return c_state
+    # , c_board
 
 def get_action(state):
     try:
-        location = input("Your move: ")
-        if isinstance(location, str):
-            location = [int(n, 10) for n in location.split(",")]
-        if len(location) != 2:
-            return -1
-        x = location[0]
-        y = location[1]
-        move = GameMove(x, y, -1)
+        if state.state.addedGoats < 18:
+            location = input("Where do you want to place a goat?")
+            if isinstance(location, str):
+                location = [int(n, 5) for n in location.split(",")]
+            if len(location) != 2:
+                return -1
+            x = location[1]
+            y = location[0]
+            # state.state.add_goat(state.state, y, x)
+            move = GameMove(2, x, y, x, y)
+        else:
+            location = input("Your move: ")
+            if isinstance(location, str):
+                location = [int(n, 5) for n in location.split(",")]
+            if len(location) != 2:
+                return -1
+            x = location[1]
+            y = location[0]
+            move = GameMove(2, x, y, x, y)
     except Exception as e:
         move = -1
-    if move == -1 or not state.is_move_legal(move):
+    # if move == -1 or not state.is_move_legal(move):
+    if move == -1:
         print("invalid move")
         move = get_action(state)
     return move
@@ -55,23 +85,30 @@ def judge(state):
         return -1
 
 
-c_state,c_board = init()
-print(c_board)
+c_state = init()
+# , c_board
+# print(c_board)
+print("Po ruchach")
+c_state.state.print()
 
 
 while True:
     move1 = get_action(c_state)
     c_state = c_state.move(move1)
-    c_board = c_state.board
-    print(c_board)
+    # c_board = c_state.state.board
+    # print(c_board)
+    c_state.state.print()
 
-    board_state = GameState(state=c_state, next_to_move=1)
+    board_state = GameState(state=c_state.state, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(1000)
+    best_node = mcts.best_action(1)
     c_state = best_node.state
-    c_board = c_state.board
-    print(c_board)
+
+    # c_board = c_state.state.board
+    # print(c_board)
+    # print("Gra")
+    c_state.state.print()
     if judge(c_state)==1:
         break
     elif judge(c_state)==-1:

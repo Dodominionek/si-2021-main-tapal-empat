@@ -78,10 +78,13 @@ class State(object):
 
     def __init__(self):
         self.addingTigers = 2
+        # self.addingTigers = 0
         self.addingGoats = False
         self.currentPlayer = -1
         self.addedGoats = 0
         self.leftGoats = 18
+        # self.addedGoats = 18
+        # self.leftGoats = 0
         self.lostGoats = 0
         self.tigersPosition = []
         self.goatsPosition = []
@@ -109,30 +112,33 @@ class State(object):
         tempX = destX
         tempY = destY
         while tempX != tigerX or tempY != tigerY:
-            if board[tempY][tempX] == 1:
-                return False
-            if destY == tigerY and destX > tigerX:
-                tempX = tempX - 1
-            elif destY == tigerY and destX < tigerX:
-                tempX = tempX + 1
-            elif destX == tigerX and destY < tigerY:
-                tempY = tempY + 1
-            elif destX == tigerX and destY > tigerY:
-                tempY = tempY - 1
-            elif destX > tigerX and destY > tigerY:
-                tempX = tempX - 1
-                tempY = tempY - 1
-            elif destX < tigerX and destY > tigerY:
-                tempX = tempX + 1
-                tempY = tempY - 1
-            elif destX > tigerX and destY < tigerY:
-                tempX = tempX - 1
-                tempY = tempY + 1
-            elif destX < tigerX and destY < tigerY:
-                tempX = tempX + 1
-                tempY = tempY + 1
-            if board[tempY][tempX] == 2:
-                return False
+            try:
+                if board[tempY][tempX] == 1:
+                    return False
+                if destY == tigerY and destX > tigerX:
+                    tempX = tempX - 1
+                elif destY == tigerY and destX < tigerX:
+                    tempX = tempX + 1
+                elif destX == tigerX and destY < tigerY:
+                    tempY = tempY + 1
+                elif destX == tigerX and destY > tigerY:
+                    tempY = tempY - 1
+                elif destX > tigerX and destY > tigerY:
+                    tempX = tempX - 1
+                    tempY = tempY - 1
+                elif destX < tigerX and destY > tigerY:
+                    tempX = tempX + 1
+                    tempY = tempY - 1
+                elif destX > tigerX and destY < tigerY:
+                    tempX = tempX - 1
+                    tempY = tempY + 1
+                elif destX < tigerX and destY < tigerY:
+                    tempX = tempX + 1
+                    tempY = tempY + 1
+                if board[tempY][tempX] == 2:
+                    return False
+            except Exception as e:
+                print(e)
         return True
 
     def check_move_goat(self, board, posY, posX, destY, destX):
@@ -177,7 +183,7 @@ class State(object):
                 if pion == 2:
                     for move in self.get_possible_moves_goat(state.board, y, x):
                         if state.board[move[0]][move[1]] == 0:
-                            possible.append(GameMove(1, y, x, move[0], move[1]))
+                            possible.append(GameMove(2, y, x, move[0], move[1]))
         return possible
 
     def getPossibleGoatPlaces(self, board):
@@ -185,7 +191,7 @@ class State(object):
         for x in range(5):
             for y in range(5):
                 if board[y][x] == 0:
-                    possibleGoatPlaces.append([y, x])
+                    possibleGoatPlaces.append(GameMove(2, y, x, y, x))
         return possibleGoatPlaces
 
     def getPossibleTigerPlaces(self, board):
@@ -193,23 +199,28 @@ class State(object):
         for x in range(5):
             for y in range(5):
                 if board[y][x] == 0 and x > 0 and y > 0 and x < 4 and y < 4:
-                    possibleTigerPlaces.append([y, x])
+                    possibleTigerPlaces.append(GameMove(1, y, x, y, x))
         return possibleTigerPlaces
 
     def checkIfTigersBlocked(self):
-        for x in range(5):
-            for y in range(5):
-                if self.board[y][x] == 1:
-                    for neighbour in self.block_checker[x * 5 + y]:
-                        if self.board[int(neighbour / 5)][int(neighbour % 5)] == 0:
-                            return False
-        return True   
+        if self.addingTigers == 0:
+            for x in range(5):
+                for y in range(5):
+                    if self.board[y][x] == 1:
+                        for neighbour in self.block_checker[x * 5 + y]:
+                            if self.board[int(neighbour / 5)][int(neighbour % 5)] == 0:
+                                return False
+            return True   
+        else:
+            return False
 
     def check_status(self):
-        if self.checkIfTigersBlocked:
+        if self.checkIfTigersBlocked():
             return -1
-        if self.lostGoats >= 8:
+        elif self.lostGoats >= 8:
             return 1
+        else:
+            return None
 
     def move_tiger(self, state, posY, posX, destY, destX):
         for capture_move in self.capture_connections[posX * 5 + posY]:

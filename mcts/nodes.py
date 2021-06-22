@@ -1,7 +1,7 @@
 import numpy as np
 from collections import defaultdict
-from game import *
 from state import GameState
+from game import *
 
 class MonteCarloTreeSearchNode(object):
     def __init__(self, state: GameState, parent=None):
@@ -35,13 +35,20 @@ class MonteCarloTreeSearchNode(object):
         return child_node
 
     def is_terminal_node(self):
+        # print("Is game over")
         return self.state.is_game_over()
 
     def rollout(self):
         current_rollout_state = self.state
         while not current_rollout_state.is_game_over():
+
+            # print("Call get legal actions")
             possible_moves = current_rollout_state.get_legal_actions()
+
+            # print("Call rollout policy")
             action = self.rollout_policy(possible_moves)
+
+            # print("Call move")
             current_rollout_state = current_rollout_state.move(action)
         return current_rollout_state.game_result
 
@@ -59,6 +66,7 @@ class MonteCarloTreeSearchNode(object):
             (c.q / (c.n)) + c_param * np.sqrt((2 * np.log(self.n) / (c.n)))
             for c in self.children
         ]
+        print(choices_weights)
         return self.children[np.argmax(choices_weights)]
 
     def rollout_policy(self, possible_moves):
