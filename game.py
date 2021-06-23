@@ -29,7 +29,7 @@ class GameState(object):
     def game_result(self):
         status = self.state.check_status()
         if status == 2:
-            return 2.
+            return -1.
         elif status == 1:
             return 1.
         else:
