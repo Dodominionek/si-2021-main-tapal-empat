@@ -1,4 +1,6 @@
+from copy import Error
 from tkinter import Widget
+from numpy import who
 import pygame
 import math
 #import board
@@ -19,13 +21,14 @@ def init():
     root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
 
-    best_node = mcts.best_action(10)
+    best_node = mcts.best_action(10000)
     c_state = best_node.state
+    state_copy = c_state.state
 
-    board_state = GameState(state=c_state.state, next_to_move=1)
+    board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(10)
+    best_node = mcts.best_action(10000)
     c_state = best_node.state
 
     return c_state
@@ -41,8 +44,7 @@ def get_action(state):
                 return -1
             x = location[1]
             y = location[0]
-            # state.state.add_goat(state.state, y, x)
-            move = GameMove(2, x, y, x, y)
+            move = GameMove(2, y, x, y, x)
         else:
             location = input("Your move: ")
             if isinstance(location, str):
@@ -51,7 +53,7 @@ def get_action(state):
                 return -1
             x = location[1]
             y = location[0]
-            move = GameMove(2, x, y, x, y)
+            move = GameMove(2, y, x, y, x)
     except Exception as e:
         move = -1
     # if move == -1 or not state.is_move_legal(move):
@@ -74,6 +76,7 @@ def judge(state):
         return -1
 
 
+
 c_state = init()
 # , c_board
 print("Po ruchach")
@@ -81,15 +84,22 @@ c_state.state.print()
 
 
 while True:
-    move1 = get_action(c_state)
-    c_state = c_state.move(move1)
-    # c_board = c_state.state.board
+    check = True
+    while check == True:
+        check = False
+        try:
+            move1 = get_action(c_state)
+            c_state = c_state.move(move1)
+        except:
+            check = True
+
+    state_copy = c_state.state
     c_state.state.print()
 
-    board_state = GameState(state=c_state.state, next_to_move=1)
+    board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(10)
+    best_node = mcts.best_action(100000)
     c_state = best_node.state
 
     # c_board = c_state.state.board

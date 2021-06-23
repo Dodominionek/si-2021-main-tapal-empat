@@ -78,13 +78,10 @@ class State(object):
 
     def __init__(self):
         self.addingTigers = 2
-        # self.addingTigers = 0
         self.addingGoats = False
         self.currentPlayer = -1
         self.addedGoats = 0
         self.leftGoats = 18
-        # self.addedGoats = 18
-        # self.leftGoats = 0
         self.lostGoats = 0
         self.tigersPosition = []
         self.goatsPosition = []
@@ -111,7 +108,7 @@ class State(object):
     def checkRoad(self, board, tigerX, tigerY, destX, destY):
         tempX = destX
         tempY = destY
-        while tempX != tigerX or tempY != tigerY:
+        while tempX != tigerX and tempY != tigerY and tempY > 4 and tempY < 0 and tempX > 4 and tempX < 0:
             try:
                 if board[tempY][tempX] == 1:
                     return False
@@ -138,6 +135,7 @@ class State(object):
                 if board[tempY][tempX] == 2:
                     return False
             except Exception as e:
+                print("Tu cie mam")
                 print(e)
         return True
 
@@ -230,17 +228,13 @@ class State(object):
                 state.board[int((destY + posY) / 2)][int((destX + posX) / 2)] = 0
                 state.addedGoats-=1
                 state.lostGoats+=1
-                posX = destX
-                posY = destY
-                state.board[posY][posX] = 1
+                state.board[destY][destX] = 1
 
         for normal_move in self.move_tigers_connections[posX * 5 + posY]:
             if normal_move == destX * 5 + destY and state.board[destY][destX] == 0 and self.checkRoad(state.board, posX, posY, destX, destY) == True: 
                 #tylko przesunięcie       
                 state.board[posY][posX] = 0
-                posX = destX
-                posY = destY
-                state.board[posY][posX] = 1
+                state.board[destY][destX] = 1
         return state
 
     def move_goat(self, state, posY, posX, destY, destX):
@@ -248,9 +242,7 @@ class State(object):
             if normal_move == destX * 5 + destY and state.board[destY][destX] == 0:
                 #tylko przesunięcie       
                 state.board[posY][posX] = 0
-                posX = destX
-                posY = destY
-                state.board[posY][posX] = 2
+                state.board[destY][destX] = 2
         return state
 
     def add_tiger(self, state, posY, posX):

@@ -20,7 +20,7 @@ class GameState(object):
     P2 = -1
     
     def __init__(self, state, next_to_move=1, c_move=None):
-        self.state = state #tu jest wszystko kuny jenoty dziki jelenie ogarnąć to i podmienić z board
+        self.state = state
         self.board_size = 5
         self.next_to_move = next_to_move
         self.current_move = c_move
@@ -54,7 +54,8 @@ class GameState(object):
         if self.state.addingTigers > 0:
             new_state, succed = self.state.add_tiger(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
-                raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
+                # raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
+                raise ValueError("move is not legal")
             if new_state.addingTigers > 0:
                 next_to_move = GameState.P1
             else:
@@ -64,18 +65,21 @@ class GameState(object):
         elif self.state.addingGoats == True and self.next_to_move == GameState.P2:
             new_state, succed = self.state.add_goat(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
-                raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
+                # raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
+                raise ValueError("move is not legal")
             next_to_move = GameState.P1
             return GameState(new_state, next_to_move, move)
 
         else:
             if not self.is_move_legal(move):
-                raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
+                # raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
+                raise ValueError("move  is not legal")
             #dla którego gracza
             if(self.next_to_move == GameState.P1):
-                new_state = self.state.move_tiger(self.state, move.pos_from[0], move.pos_from[1], move.pos_to[0], move.pos_to[1])
+                # self.state.print()
+                new_state = self.state.move_tiger(new_state, move.pos_from[0], move.pos_from[1], move.pos_to[0], move.pos_to[1])
             else:
-                new_state = self.state.move_goat(self.state, move.pos_from[0], move.pos_from[1], move.pos_to[0], move.pos_to[1])
+                new_state = self.state.move_goat(new_state, move.pos_from[0], move.pos_from[1], move.pos_to[0], move.pos_to[1])
 
             next_to_move = GameState.P2 if self.next_to_move == GameState.P1 else GameState.P1
             return GameState(new_state, next_to_move, move)

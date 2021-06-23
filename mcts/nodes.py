@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from collections import defaultdict
 from state import GameState
@@ -40,7 +41,7 @@ class MonteCarloTreeSearchNode(object):
 
     def rollout(self):
         current_rollout_state = self.state
-        while not current_rollout_state.is_game_over():
+        while not current_rollout_state.is_game_over() and current_rollout_state.state.addingTigers != 0:
             possible_moves = current_rollout_state.get_legal_actions()
             action = self.rollout_policy(possible_moves)
             current_rollout_state = current_rollout_state.move(action)
@@ -56,12 +57,22 @@ class MonteCarloTreeSearchNode(object):
         return len(self.untried_actions) == 0
 
     def best_child(self, c_param=1.4):
-        choices_weights = [
-            (c.q / (c.n)) + c_param * np.sqrt((2 * np.log(self.n) / (c.n)))
-            for c in self.children
-        ]
-        # print(choices_weights)
-        return self.children[np.argmax(choices_weights)]
+        # choices_weights = [
+        #     (c.q / (c.n)) + c_param * np.sqrt((2 * np.log(self.n) / (c.n)))
+        #     for c in self.children
+        # ]
+        # return self.children[np.argmax(choices_weights)]
+        best = self.children[0]
+        for c in self.children:
+            s = (c.q / float(c.n)) + c_param * math.sqrt((2 * float(math.log(self.n)) / float(c.n)))
+            c.score = s
+            if best.score < c.score:
+                best = c
+        return best
+
 
     def rollout_policy(self, possible_moves):
-        return possible_moves[np.random.randint(len(possible_moves))]
+        possible = len(possible_moves)
+        # if len(possible_moves) == 0:
+        #     possible = 1
+        return possible_moves[np.random.randint(possible)]
