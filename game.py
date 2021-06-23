@@ -27,14 +27,11 @@ class GameState(object):
 
     @property
     def game_result(self):
-        # check if game is over
         status = self.state.check_status()
-        # print("Game status")
-        # print(status)
-        if status == 1:
+        if status == 2:
+            return 2.
+        elif status == 1:
             return 1.
-        elif status == -1:
-            return -1.
         else:
             # if not over - no result
             return None

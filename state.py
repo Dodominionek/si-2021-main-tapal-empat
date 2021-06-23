@@ -135,7 +135,7 @@ class State(object):
                 if board[tempY][tempX] == 2:
                     return False
             except Exception as e:
-                print("Tu cie mam")
+                print("Check road error")
                 print(e)
         return True
 
@@ -214,7 +214,7 @@ class State(object):
 
     def check_status(self):
         if self.checkIfTigersBlocked():
-            return -1
+            return 2
         elif self.lostGoats >= 8:
             return 1
         else:
