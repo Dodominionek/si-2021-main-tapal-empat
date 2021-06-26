@@ -12,20 +12,20 @@ from state import *
 def init():
     state = State()
 
-    initial_board_state = GameState(state=state, next_to_move=1)
+    initial_board_state = GameState(state = state, next_to_move=1)
 
     print("Poczatkowy")
     state.print()
 
-    root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
+    root = Node(state = initial_board_state, parent = None)
     mcts = MonteCarloTreeSearch(root)
 
     best_node = mcts.best_action(1000)
     c_state = best_node.state
     state_copy = c_state.state
 
-    board_state = GameState(state=state_copy, next_to_move=1)
-    root = MonteCarloTreeSearchNode(state=board_state, parent=None)
+    board_state = GameState(state = state_copy, next_to_move = 1)
+    root = Node(state = board_state, parent = None)
     mcts = MonteCarloTreeSearch(root)
     best_node = mcts.best_action(1000)
     c_state = best_node.state
@@ -71,13 +71,12 @@ def judge(state):
     if state.is_game_over():
         if state.game_result == 1.0:
             print("You lose!")
-        if state.game_result == 0.0:
-            print("Tie!")
-        if state.game_result == -1.0:
+            return 1
+        if state.game_result == 2.0:
             print("You Win!")
-        return 1
+            return 2
     else:
-        return -1
+        return 0
 
 
 
@@ -98,14 +97,14 @@ while True:
     state_copy = c_state.state
     c_state.state.print()
 
-    board_state = GameState(state=state_copy, next_to_move=1)
-    root = MonteCarloTreeSearchNode(state=board_state, parent=None)
+    board_state = GameState(state = state_copy, next_to_move = 1)
+    root = Node(state = board_state, parent = None)
     mcts = MonteCarloTreeSearch(root)
     best_node = mcts.best_action(1000)
     c_state = best_node.state
 
     c_state.state.print()
-    if judge(c_state)==1:
+    if judge(c_state) == 1 or judge(c_state) == 2:
         break
-    elif judge(c_state)==-1:
+    else:
         continue

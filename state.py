@@ -135,7 +135,6 @@ class State(object):
                     tempX = tempX + 1
                     tempY = tempY + 1
             except Exception as e:
-                print("Check road error")
                 print(e)
         return True
 
@@ -218,7 +217,7 @@ class State(object):
         elif self.lostGoats >= 8:
             return 1
         else:
-            return None
+            return 0
 
     def move_tiger(self, state, posY, posX, destY, destX):
         for capture_move in self.capture_connections[posX * 5 + posY]:
