@@ -93,14 +93,14 @@ class State(object):
             [0,0,0,0,0],
         ]
 
-    def check_move_tiger(self, board, posY, posX, destY, destX):
+    def check_move_tiger(self, board, posX, posY, destX, destY):
         possible_move = False
         for capture_move in self.capture_connections[posX * 5 + posY]:
             if capture_move == destX * 5 + destY and board[destY][destX] == 0 and board[int((destY + posY) / 2)][int((destX + posX) / 2)] == 2:
                 possible_move = True
 
         for normal_move in self.move_tigers_connections[posX * 5 + posY]:
-            if normal_move == destX * 5 + destY and board[destY][destX] == 0 and self.checkRoad(board, posX, posY, destX, destY) == True:
+            if normal_move == destX * 5 + destY and board[destY][destX] == 0 and self.checkRoad(board, posY, posX, destY, destX) == True:
                 possible_move = True
 
         return possible_move
@@ -108,32 +108,32 @@ class State(object):
     def checkRoad(self, board, tigerX, tigerY, destX, destY):
         tempX = destX
         tempY = destY
-        while tempX != tigerX and tempY != tigerY and tempY > 4 and tempY < 0 and tempX > 4 and tempX < 0:
+        while not (tempX == tigerX and tempY == tigerY):
             try:
                 if board[tempY][tempX] == 1:
                     return False
-                if destY == tigerY and destX > tigerX:
-                    tempX = tempX - 1
-                elif destY == tigerY and destX < tigerX:
-                    tempX = tempX + 1
-                elif destX == tigerX and destY < tigerY:
-                    tempY = tempY + 1
-                elif destX == tigerX and destY > tigerY:
-                    tempY = tempY - 1
-                elif destX > tigerX and destY > tigerY:
-                    tempX = tempX - 1
-                    tempY = tempY - 1
-                elif destX < tigerX and destY > tigerY:
-                    tempX = tempX + 1
-                    tempY = tempY - 1
-                elif destX > tigerX and destY < tigerY:
-                    tempX = tempX - 1
-                    tempY = tempY + 1
-                elif destX < tigerX and destY < tigerY:
-                    tempX = tempX + 1
-                    tempY = tempY + 1
                 if board[tempY][tempX] == 2:
                     return False
+                if tempY == tigerY and tempX > tigerX:
+                    tempX = tempX - 1
+                elif tempY == tigerY and tempX < tigerX:
+                    tempX = tempX + 1
+                elif tempX == tigerX and tempY < tigerY:
+                    tempY = tempY + 1
+                elif tempX == tigerX and tempY > tigerY:
+                    tempY = tempY - 1
+                elif tempX > tigerX and tempY > tigerY:
+                    tempX = tempX - 1
+                    tempY = tempY - 1
+                elif tempX < tigerX and tempY > tigerY:
+                    tempX = tempX + 1
+                    tempY = tempY - 1
+                elif tempX > tigerX and tempY < tigerY:
+                    tempX = tempX - 1
+                    tempY = tempY + 1
+                elif tempX < tigerX and tempY < tigerY:
+                    tempX = tempX + 1
+                    tempY = tempY + 1
             except Exception as e:
                 print("Check road error")
                 print(e)
@@ -270,17 +270,3 @@ class State(object):
         print("__|0  1  2  3  4")
         for i in range(5):
             print(str(i)+" "+str(self.board[i]))
-
-# state = State()
-# places = state.getPossibleTigerPlaces(state.board)
-# state.print()
-# print(places)
-# state.add_tiger(state, places[0][0], places[0][1])
-# state.print()
-# moves = state.get_all_possible_moves_tiger(state)
-# state.move_tiger(state, moves[0].pos_from[0], moves[0].pos_from[1], moves[0].pos_to[0], moves[0].pos_to[1])
-# state.print()
-# state.addingGoats = True
-# goat_places = state.getPossibleGoatPlaces(state.board)
-# state.add_goat(state, goat_places[0][0], goat_places[0][1])
-# state.print()

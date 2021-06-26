@@ -10,9 +10,7 @@ class MonteCarloTreeSearch:
             v = self.tree_policy()
             reward = v.rollout()
             v.backpropagate(reward)
-        # exploitation only
         return self.root.best_child(c_param=0.)
-        #     return best
 
     def tree_policy(self):
         current_node = self.root

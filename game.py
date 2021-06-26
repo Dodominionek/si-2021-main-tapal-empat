@@ -4,7 +4,6 @@ import sys
 
 import numpy as np
 
-#from board import Board
 class GameMove(object):
     def __init__(self, value, posY, posX, destY, destX):
         self.pos_from = [posY, posX]
@@ -33,7 +32,6 @@ class GameState(object):
         elif status == 1:
             return 1.
         else:
-            # if not over - no result
             return None
 
     def is_game_over(self):
@@ -51,7 +49,6 @@ class GameState(object):
         if self.state.addingTigers > 0:
             new_state, succed = self.state.add_tiger(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
-                # raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
                 raise ValueError("move is not legal")
             if new_state.addingTigers > 0:
                 next_to_move = GameState.P1
@@ -62,18 +59,14 @@ class GameState(object):
         elif self.state.addingGoats == True and self.next_to_move == GameState.P2:
             new_state, succed = self.state.add_goat(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
-                # raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
                 raise ValueError("move is not legal")
             next_to_move = GameState.P1
             return GameState(new_state, next_to_move, move)
 
         else:
             if not self.is_move_legal(move):
-                # raise ValueError("move " + move + " on board " + self.state.board + " is not legal")
                 raise ValueError("move  is not legal")
-            #dla którego gracza
             if(self.next_to_move == GameState.P1):
-                # self.state.print()
                 new_state = self.state.move_tiger(new_state, move.pos_from[0], move.pos_from[1], move.pos_to[0], move.pos_to[1])
             else:
                 new_state = self.state.move_goat(new_state, move.pos_from[0], move.pos_from[1], move.pos_to[0], move.pos_to[1])
@@ -87,6 +80,7 @@ class GameState(object):
             if self.state.addingTigers > 0:
                 return self.state.getPossibleTigerPlaces(self.state.board)
             else:
+                print(self.state.get_all_possible_moves_tiger(self.state))
                 return self.state.get_all_possible_moves_tiger(self.state)
         else:
             if self.state.leftGoats > 0:

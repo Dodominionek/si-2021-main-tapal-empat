@@ -1,3 +1,4 @@
+from copy import Error
 import math
 import numpy as np
 from collections import defaultdict
@@ -36,7 +37,6 @@ class MonteCarloTreeSearchNode(object):
         return child_node
 
     def is_terminal_node(self):
-        # print("Is game over")
         return self.state.is_game_over()
 
     def rollout(self):
@@ -57,17 +57,20 @@ class MonteCarloTreeSearchNode(object):
         return len(self.untried_actions) == 0
 
     def best_child(self, c_param=1.4):
-        best = self.children[0]
-        for c in self.children:
-            s = (c.q / float(c.n)) + c_param * math.sqrt((2 * float(math.log(self.n)) / float(c.n)))
-            c.score = s
-            if best.score < c.score:
-                best = c
-        return best
+        try:
+            if len(self.children) == 0:
+                raise(Error)
+            best = self.children[0]
+            for c in self.children:
+                s = (c.q / float(c.n)) + c_param * math.sqrt((2 * float(math.log(self.n)) / float(c.n)))
+                c.score = s
+                if best.score < c.score:
+                    best = c
+            return best
+        except Error as e:
+            print(e)
 
 
     def rollout_policy(self, possible_moves):
         possible = len(possible_moves)
-        # if len(possible_moves) == 0:
-        #     possible = 1
         return possible_moves[np.random.randint(possible)]
