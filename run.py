@@ -21,14 +21,14 @@ def init():
     mcts = MonteCarloTreeSearch(root)
 
     best_node = mcts.best_action(1000)
-    c_state = best_node.state
+    c_state = best_node.node_state
     state_copy = c_state.state
 
     board_state = GameState(state = state_copy, next_to_move = 1)
     root = Node(state = board_state, parent = None)
     mcts = MonteCarloTreeSearch(root)
     best_node = mcts.best_action(1000)
-    c_state = best_node.state
+    c_state = best_node.node_state
 
     return c_state
 
@@ -101,7 +101,7 @@ while True:
     root = Node(state = board_state, parent = None)
     mcts = MonteCarloTreeSearch(root)
     best_node = mcts.best_action(1000)
-    c_state = best_node.state
+    c_state = best_node.node_state
 
     c_state.state.print()
     if judge(c_state) == 1 or judge(c_state) == 2:

@@ -2,6 +2,8 @@ from copy import Error
 import math
 import numpy as np
 from collections import defaultdict
+
+from numpy.random import choice
 from state import GameState
 from game import *
 
@@ -42,10 +44,13 @@ class Node:
 
     def rollout(self):
         current_rollout_state = self.node_state
-        while current_rollout_state.is_game_over() != 1 or current_rollout_state.is_game_over() != 2 and current_rollout_state.state.addingTigers != 0:
+        while current_rollout_state.is_game_over() != 1 or current_rollout_state.is_game_over() != 2:
             possible_moves = current_rollout_state.get_legal_actions()
-            action = self.rollout_policy(possible_moves)
-            current_rollout_state = current_rollout_state.move(action)
+            if len(possible_moves) != 0:
+                action = self.rollout_policy(possible_moves)
+                current_rollout_state = current_rollout_state.move(action)
+            else:
+                break
         return current_rollout_state.game_result
 
     def backpropagate(self, result):
@@ -73,5 +78,5 @@ class Node:
 
     def rollout_policy(self, possible_moves):
         possible = len(possible_moves)
-        print(possible)
-        return possible_moves[np.random.randint(possible)]
+        choice = np.random.randint(possible)
+        return possible_moves[choice]
