@@ -57,11 +57,6 @@ class MonteCarloTreeSearchNode(object):
         return len(self.untried_actions) == 0
 
     def best_child(self, c_param=1.4):
-        # choices_weights = [
-        #     (c.q / (c.n)) + c_param * np.sqrt((2 * np.log(self.n) / (c.n)))
-        #     for c in self.children
-        # ]
-        # return self.children[np.argmax(choices_weights)]
         best = self.children[0]
         for c in self.children:
             s = (c.q / float(c.n)) + c_param * math.sqrt((2 * float(math.log(self.n)) / float(c.n)))

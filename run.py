@@ -82,9 +82,6 @@ c_state = init()
 print("Po ruchach")
 c_state.state.print()
 
-# Working
-
-
 while True:
     check = True
     while check == True:
