@@ -28,14 +28,14 @@ class GameState(object):
     def game_result(self):
         status = self.state.check_status()
         if status == 2:
-            return -1.
+            return 2.
         elif status == 1:
             return 1.
         else:
-            return None
+            return 0
 
     def is_game_over(self):
-        return self.game_result is not None
+        return self.game_result
 
     def is_move_legal(self, move):
         if(self.next_to_move == GameState.P1):
@@ -80,7 +80,6 @@ class GameState(object):
             if self.state.addingTigers > 0:
                 return self.state.getPossibleTigerPlaces(self.state.board)
             else:
-                print(self.state.get_all_possible_moves_tiger(self.state))
                 return self.state.get_all_possible_moves_tiger(self.state)
         else:
             if self.state.leftGoats > 0:
