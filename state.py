@@ -135,7 +135,6 @@ class State(object):
                     tempX = tempX + 1
                     tempY = tempY + 1
             except Exception as e:
-                print("Check road error")
                 print(e)
         return True
 

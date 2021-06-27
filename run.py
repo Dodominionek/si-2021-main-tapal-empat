@@ -9,7 +9,7 @@ from pygame.scrap import lost, put
 from game import *
 from state import *
 
-sim_count_deploy = 100
+sim_count_deploy = 1000
 sim_count = 1000
 
 def init():
@@ -81,9 +81,7 @@ def judge(state):
 
 
 c_state = init()
-print()
 c_state.state.print()
-print()
 
 while True:
     check = True
@@ -97,7 +95,6 @@ while True:
 
     state_copy = c_state.state
     c_state.state.print()
-    print()
 
     # board_state = GameState(state=c_state.state, next_to_move=1)
     board_state = GameState(state=state_copy, next_to_move=1)
@@ -110,12 +107,10 @@ while True:
         try:
             best_node = mcts.best_action(sim_count)
             c_state = best_node.state
+            c_state.state.print()
         except:
             check = True
         if judge(c_state)==1:
             break
         elif judge(c_state)==-1:
             continue
-
-    c_state.state.print()
-    print()
