@@ -213,11 +213,26 @@ class State(object):
 
     def check_status(self):
         if self.checkIfTigersBlocked():
-            return 2
-        elif self.lostGoats >= 8:
             return 1
+        elif self.lostGoats >= 8:
+            return -1
         else:
             return 0
+
+    @property
+    def game_result(self):
+        # check if game is over
+        status = self.board.checkStatus()
+        if status == 1:
+            return 1.
+        elif status == -1:
+            return -1.
+        else:
+            # if not over - no result
+            return None
+
+    def is_game_over(self):
+        return self.game_result is not None 
 
     def move_tiger(self, state, posY, posX, destY, destX):
         for capture_move in self.capture_connections[posX * 5 + posY]:
