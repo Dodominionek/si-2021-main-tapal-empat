@@ -9,6 +9,8 @@ from pygame.scrap import lost, put
 from game import *
 from state import *
 
+sim_count = 1000
+
 def init():
     state = State()
     initial_board_state = GameState(state=state, next_to_move=1)
@@ -19,14 +21,14 @@ def init():
     root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
 
-    best_node = mcts.best_action(1000)
+    best_node = mcts.best_action(sim_count)
     c_state = best_node.state
     state_copy = c_state.state
 
     board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(1000)
+    best_node = mcts.best_action(sim_count)
     c_state = best_node.state
 
     return c_state
@@ -95,12 +97,13 @@ while True:
     state_copy = c_state.state
     c_state.state.print()
 
+    # board_state = GameState(state=c_state.state, next_to_move=1)
     board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
 
     try:
-        best_node = mcts.best_action(1000)
+        best_node = mcts.best_action(sim_count)
     except Error as er:
         print(er)
     
