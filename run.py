@@ -102,15 +102,17 @@ while True:
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
 
-    try:
-        best_node = mcts.best_action(sim_count)
-    except Error as er:
-        print(er)
-    
-    c_state = best_node.state
+    check = True
+    while check == True:
+        check = False
+        try:
+            best_node = mcts.best_action(sim_count)
+            c_state = best_node.state
+        except:
+            check = True
+        if judge(c_state)==1:
+            break
+        elif judge(c_state)==-1:
+            continue
 
     c_state.state.print()
-    if judge(c_state)==1:
-        break
-    elif judge(c_state)==-1:
-        continue
