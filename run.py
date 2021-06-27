@@ -9,7 +9,7 @@ from pygame.scrap import lost, put
 from game import *
 from state import *
 
-sim_count = 1000
+sim_count = 100
 
 def init():
     state = State()
