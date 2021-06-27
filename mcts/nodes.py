@@ -12,6 +12,7 @@ class MonteCarloTreeSearchNode(object):
         self.state = state
         self.parent = parent
         self.children = []
+        self.score = 0
 
     @property
     def untried_actions(self):

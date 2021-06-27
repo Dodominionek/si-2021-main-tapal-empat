@@ -9,26 +9,26 @@ from pygame.scrap import lost, put
 from game import *
 from state import *
 
-sim_count = 100
+sim_count_deploy = 100
+sim_count = 1000
 
 def init():
     state = State()
     initial_board_state = GameState(state=state, next_to_move=1)
 
-    print("Poczatkowy")
     state.print()
 
     root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
 
-    best_node = mcts.best_action(sim_count)
+    best_node = mcts.best_action(sim_count_deploy)
     c_state = best_node.state
     state_copy = c_state.state
 
     board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
-    best_node = mcts.best_action(sim_count)
+    best_node = mcts.best_action(sim_count_deploy)
     c_state = best_node.state
 
     return c_state
@@ -81,8 +81,9 @@ def judge(state):
 
 
 c_state = init()
-print("Po ruchach")
+print()
 c_state.state.print()
+print()
 
 while True:
     check = True
@@ -96,6 +97,7 @@ while True:
 
     state_copy = c_state.state
     c_state.state.print()
+    print()
 
     # board_state = GameState(state=c_state.state, next_to_move=1)
     board_state = GameState(state=state_copy, next_to_move=1)
@@ -116,3 +118,4 @@ while True:
             continue
 
     c_state.state.print()
+    print()
