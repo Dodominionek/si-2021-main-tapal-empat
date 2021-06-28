@@ -10,9 +10,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from tkinter import filedialog
 
-from PyQt5 import QtTest
-from PIL import Image
-
 import sys, tkinter
 
 root = tkinter.Tk()
