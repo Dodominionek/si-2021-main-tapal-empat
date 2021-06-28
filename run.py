@@ -10,14 +10,13 @@ from game import *
 from state import *
 
 sim_count_deploy = 100
-sim_count = 1000
+sim_count = 100
 
 def init():
     state = State()
     initial_board_state = GameState(state=state, next_to_move=1)
 
     state.print()
-
     root = MonteCarloTreeSearchNode(state=initial_board_state, parent=None)
     mcts = MonteCarloTreeSearch(root)
 
@@ -35,7 +34,7 @@ def init():
 
 def get_action(state):
     try:
-        if state.state.addedGoats < 18:
+        if state.state.addingGoats:
             location = input("Where do you want to place a goat?")
             if isinstance(location, str):
                 location = [int(n, 5) for n in location.split(",")]
@@ -86,6 +85,8 @@ c_state.state.print()
 print()
 
 while True:
+    print('Goats left: ' + str(c_state.state.leftGoats))
+    print('Added goats: ' + str(c_state.state.addedGoats))
     check = True
     while check == True:
         check = False
@@ -95,9 +96,12 @@ while True:
         except:
             check = True
 
-    state_copy = c_state.state
     c_state.state.print()
-    print()
+
+    if judge(c_state)==1:
+        break
+
+    state_copy = c_state.state
 
     # board_state = GameState(state=c_state.state, next_to_move=1)
     board_state = GameState(state=state_copy, next_to_move=1)
@@ -105,17 +109,16 @@ while True:
     mcts = MonteCarloTreeSearch(root)
 
     check = True
-    while check == True:
-        check = False
-        try:
-            best_node = mcts.best_action(sim_count)
-            c_state = best_node.state
-        except:
-            check = True
-        if judge(c_state)==1:
-            break
-        elif judge(c_state)==-1:
-            continue
-
+    # while check == True:
+    #     check = False
+    #     try:
+    best_node = mcts.best_action(sim_count)
+    c_state = best_node.state
+        # except:
+        #     check = True
     c_state.state.print()
-    print()
+
+    if judge(c_state)==1:
+        break
+    elif judge(c_state)==-1:
+        continue

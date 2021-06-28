@@ -45,7 +45,7 @@ class GameState(object):
                 
     def move(self, move):
         new_state = copy.deepcopy(self.state)
-        if self.state.addedGoats == 18:
+        if self.state.leftGoats == 0:
             self.state.addingGoats = False
         #rozstawianie
         if self.state.addingTigers > 0:
