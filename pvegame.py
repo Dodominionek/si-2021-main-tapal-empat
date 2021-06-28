@@ -362,13 +362,19 @@ def writeText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats,
     textGoatsLostSurface = myfont.render(textGoatsLost, False, (0, 0, 0))
     screen.blit(textGoatsLostSurface,(1000,150))
 
-def updateTigers(receivedBoard, board, screen, color):
+def updateAnimals(receivedBoard, board, screen, color):
+    board.tigers = []
+    board.goats = []
+
+    board.fields = receivedBoard
+                
     for x in range(5):
         for y in range(5):
-            if receivedBoard[y][x] == 1:
-                board.fields[y][x] == 1
+            if board.fields[y][x] == 1:
                 board.tigers.append(Tiger((x * 200) + 100, (y * 200) + 100))
-                pygame.draw.circle(screen, color, [(x * 200) + 100, (y * 200) + 100], 30)
+            elif receivedBoard[y][x] == 2:
+                board.goats.append(Goat((x * 200) + 100, (y * 200) + 100))
+                #pygame.draw.circle(screen, color, [(x * 200) + 100, (y * 200) + 100], 30)
 
 class PVTGame():
     global text
@@ -414,7 +420,7 @@ class PVTGame():
             if addingTigers == True:
                 clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
                 c_state = init(sim_count)
-                updateTigers(c_state.state.board, self.board, self.screen, color)
+                updateAnimals(c_state.state.board, self.board, self.screen, color)
                 c_state.state.print()
                 print('Tygrysy rozstawiły')
                 text = 'Tygrysy rozstawiły ' + str(len(self.board.tigers))
@@ -422,15 +428,18 @@ class PVTGame():
                 addingTigers = False
             elif tigersMove == True:
                 clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
-                c_state.state.board = self.board
+                c_state.state.board = self.board.fields
                 state_copy = c_state.state
                 board_state = GameState(state=state_copy, next_to_move=1)
                 root = MonteCarloTreeSearchNode(state=board_state, parent=None)
                 mcts = MonteCarloTreeSearch(root)
+                best_node = mcts.best_action(sim_count)
+                c_state = best_node.state
                 print('Tygrysy zrobiły ruch')
                 text = 'Tygrysy zrobiły ruch'
-                updateTigers(c_state.state.board, self.board, self.screen, color)
+                updateAnimals(c_state.state.board, self.board, self.screen, color)
                 c_state.state.print()
+                self.board.prepareBoard(self.screen)
                 self.board.updateBoard(self.screen)
                 tigersMove = False
 
