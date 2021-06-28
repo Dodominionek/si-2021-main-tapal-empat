@@ -60,20 +60,24 @@ def get_action(state, screen):
                             pygame.draw.circle(screen, 'green', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
                             pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 28)
                             pygame.display.flip()
-                            for event in pygame.event.get():
-                                if event.type == pygame.MOUSEBUTTONDOWN:
-                                    xTo, yTo = pygame.mouse.get_pos()
-                                    xTo = xTo + 50
-                                    yTo = yTo + 50
-                                    if xTo > 100 and xTo < 1100 and yTo > 100 and yTo < 1100:
-                                        xTo = math.floor(xTo / 200)
-                                        yTo = math.floor(yTo / 200)
-                                        if state.state.board[yTo][xTo] == 0:
-                                            move = GameMove(2, y, x, yTo, xTo)
+                            noCoords = True
+                            while noCoords:
+                                for event in pygame.event.get():
+                                    if event.type == pygame.MOUSEBUTTONDOWN:
+                                        xTo, yTo = pygame.mouse.get_pos()
+                                        xTo = xTo + 50
+                                        yTo = yTo + 50
+                                        if xTo > 100 and xTo < 1100 and yTo > 100 and yTo < 1100:
+                                            xTo = math.floor(xTo / 200)
+                                            yTo = math.floor(yTo / 200)
+                                            if state.state.board[yTo][xTo] == 0:
+                                                pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
+                                                move = GameMove(2, y, x, yTo, xTo)
+                                                noCoords = False
+                                            else:
+                                                raise(Exception)
                                         else:
                                             raise(Exception)
-                                    else:
-                                        raise(Exception)
                         else:
                             raise(Exception)
     except Exception as e:
