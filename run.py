@@ -80,9 +80,7 @@ def judge(state):
 
 
 c_state = init()
-print()
 c_state.state.print()
-print()
 
 while True:
     print('Goats left: ' + str(c_state.state.leftGoats))
