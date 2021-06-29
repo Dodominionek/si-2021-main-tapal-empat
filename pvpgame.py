@@ -137,34 +137,6 @@ class Field:
     def changeColor(self, col):
         self.color = col
 
-# pygame.init()
-# pygame.font.init()
-# myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-# screen = pygame.display.set_mode([1500, 1000])
-
-# board = Board()
-
-# text = 'Tygrysy rozstawiają'
-
-# color = 'orange'
-# addingTigers = True
-# addingGoats = False
-# tigersMove = False
-# addedGoats = 0
-# leftGoats = 18
-# lostGoats = 0
-
-# ended = False
-
-# textGoatsLeft = 'Pozostałe kozy: ' + str(leftGoats - addedGoats)
-
-# textGoatsDeployed = 'Wykorzystane kozy: ' + str(addedGoats)
-
-# textGoats = 'Kozy na planszy: ' +  str(len(board.goats))
-
-# textGoatsLost = 'Stracone kozy: ' + str(addedGoats - len(board.goats))
-
 def checkRoad(destX, destY, tigerX, tigerY, board):
     tempX = destX
     tempY = destY
@@ -268,11 +240,6 @@ class Goat:
                             noCoords = False
 
 
-# running = True
-
-# screen.fill((255, 255, 255))
-# board.prepareBoard()
-
 def isInsideSquare(x, y):
     if math.floor(x / 100) * 100 >= 300 and math.floor(x / 100) * 100 <= 700 and math.floor(y / 100) * 100 >= 300 and math.floor(y / 100) * 100 <= 700:
         return True
@@ -293,28 +260,32 @@ def checkIfTigersBlocked(board):
     return True   
 
 def clearText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
-    textsurface = myfont.render(text, False, (255, 255, 255))
-    screen.blit(textsurface,(0,0))
+    bigfont = pygame.font.SysFont('Comic Sans MS', 50)
+    textsurface = bigfont.render(text, False, (255, 255, 255))
+    # screen.blit(textsurface,(0,0))
+    screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (255, 255, 255))
-    screen.blit(textGoatsLeftSurface,(1000,0))
+    screen.blit(textGoatsLeftSurface,(1000,100))
     textGoatsDeployedSurface = myfont.render(textGoatsDeployed, False, (255, 255, 255))
-    screen.blit(textGoatsDeployedSurface,(1000,50))
+    screen.blit(textGoatsDeployedSurface,(1000,150))
     textGoatsSurface = myfont.render(textGoats, False, (255, 255, 255))
-    screen.blit(textGoatsSurface,(1000,100))
+    screen.blit(textGoatsSurface,(1000,200))
     textGoatsLostSurface = myfont.render(textGoatsLost, False, (255, 255, 255))
-    screen.blit(textGoatsLostSurface,(1000,150))
+    screen.blit(textGoatsLostSurface,(1000,250))
 
 def writeText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
-    textsurface = myfont.render(text, False, (0, 0, 0))
-    screen.blit(textsurface,(0,0))
+    bigfont = pygame.font.SysFont('Comic Sans MS', 50)
+    textsurface = bigfont.render(text, False, (0, 0, 0))
+    # screen.blit(textsurface,(0,0))
+    screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (0, 0, 0))
-    screen.blit(textGoatsLeftSurface,(1000,0))
+    screen.blit(textGoatsLeftSurface,(1000,100))
     textGoatsDeployedSurface = myfont.render(textGoatsDeployed, False, (0, 0, 0))
-    screen.blit(textGoatsDeployedSurface,(1000,50))
+    screen.blit(textGoatsDeployedSurface,(1000,150))
     textGoatsSurface = myfont.render(textGoats, False, (0, 0, 0))
-    screen.blit(textGoatsSurface,(1000,100))
+    screen.blit(textGoatsSurface,(1000,200))
     textGoatsLostSurface = myfont.render(textGoatsLost, False, (0, 0, 0))
-    screen.blit(textGoatsLostSurface,(1000,150))
+    screen.blit(textGoatsLostSurface,(1000,250))
 
 class PVPGame():
     global text

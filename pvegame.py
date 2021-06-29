@@ -151,28 +151,32 @@ class Field:
         self.color = col
 
 def clearText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
-    textsurface = myfont.render(text, False, (255, 255, 255))
-    screen.blit(textsurface,(0,0))
+    bigfont = pygame.font.SysFont('Comic Sans MS', 50)
+    textsurface = bigfont.render(text, False, (255, 255, 255))
+    # screen.blit(textsurface,(0,0))
+    screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (255, 255, 255))
-    screen.blit(textGoatsLeftSurface,(1000,0))
+    screen.blit(textGoatsLeftSurface,(1000,100))
     textGoatsDeployedSurface = myfont.render(textGoatsDeployed, False, (255, 255, 255))
-    screen.blit(textGoatsDeployedSurface,(1000,50))
+    screen.blit(textGoatsDeployedSurface,(1000,150))
     textGoatsSurface = myfont.render(textGoats, False, (255, 255, 255))
-    screen.blit(textGoatsSurface,(1000,100))
+    screen.blit(textGoatsSurface,(1000,200))
     textGoatsLostSurface = myfont.render(textGoatsLost, False, (255, 255, 255))
-    screen.blit(textGoatsLostSurface,(1000,150))
+    screen.blit(textGoatsLostSurface,(1000,250))
 
 def writeText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
-    textsurface = myfont.render(text, False, (0, 0, 0))
-    screen.blit(textsurface,(0,0))
+    bigfont = pygame.font.SysFont('Comic Sans MS', 50)
+    textsurface = bigfont.render(text, False, (0, 0, 0))
+    # screen.blit(textsurface,(0,0))
+    screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (0, 0, 0))
-    screen.blit(textGoatsLeftSurface,(1000,0))
+    screen.blit(textGoatsLeftSurface,(1000,100))
     textGoatsDeployedSurface = myfont.render(textGoatsDeployed, False, (0, 0, 0))
-    screen.blit(textGoatsDeployedSurface,(1000,50))
+    screen.blit(textGoatsDeployedSurface,(1000,150))
     textGoatsSurface = myfont.render(textGoats, False, (0, 0, 0))
-    screen.blit(textGoatsSurface,(1000,100))
+    screen.blit(textGoatsSurface,(1000,200))
     textGoatsLostSurface = myfont.render(textGoatsLost, False, (0, 0, 0))
-    screen.blit(textGoatsLostSurface,(1000,150))
+    screen.blit(textGoatsLostSurface,(1000,250))
 
 def updateScreen(board_c_state, board, screen):
     board.prepareBoard(screen)
@@ -229,6 +233,11 @@ class PVTGame():
         while init_thread.is_alive() and self.quit:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                    text = 'Zamykanie'
+                    writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                    pygame.display.flip()
+                    init_thread.join()
                     pygame.quit()
                     self.menu.show()
                     self.quit = False
@@ -279,6 +288,11 @@ class PVTGame():
                 while sim_thread.is_alive() and self.running:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
+                            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                            text = 'Zamykanie'
+                            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                            pygame.display.flip()
+                            sim_thread.join()
                             self.running = False
                             pygame.quit()
                             self.menu.show()
@@ -367,6 +381,11 @@ class BVBGame():
         while init_thread.is_alive() and self.quit:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                    text = 'Zamykanie'
+                    writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                    pygame.display.flip()
+                    init_thread.join()
                     pygame.quit()
                     self.menu.show()
                     self.quit = False
@@ -401,6 +420,11 @@ class BVBGame():
                 while sim_thread.is_alive() and self.running:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
+                            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                            text = 'Zamykanie'
+                            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                            pygame.display.flip()
+                            sim_thread.join()
                             self.running = False
                             pygame.quit()
                             self.menu.show()
@@ -435,6 +459,11 @@ class BVBGame():
                     while sim_thread.is_alive() and self.running:
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
+                                clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                                text = 'Zamykanie'
+                                writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                                pygame.display.flip()
+                                sim_thread.join()
                                 self.running = False
                                 pygame.quit()
                                 self.menu.show()
