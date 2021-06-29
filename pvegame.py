@@ -274,3 +274,92 @@ class PVTGame():
 
         pygame.quit()
         menu.show()
+
+class BVBGame():
+    global text
+    global textGoats
+    global textGoatsDeployed
+    global textGoatsLost
+    global textGoatsLeft
+    global running
+    global ended
+    global screen
+    global myfont
+    global board
+    global addedGoats
+    global leftGoats
+
+    def __init__(self, menu, sim_count):
+        self.screen = pygame.display.set_mode([1500, 1000])
+        myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.board = Board()
+        text = 'Tygrysy rozstawiają'
+        running = True
+        self.screen.fill((255, 255, 255))
+        self.board.prepareBoard(self.screen)
+        textGoatsLeft = 'Pozostałe kozy: ' + str(18)
+        textGoatsDeployed = 'Rozstawione kozy: ' + str(0)
+        textGoats = 'Kozy na planszy: ' + str(0)
+        textGoatsLost  = 'Utracone kozy: ' + str(0)
+        clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+        writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+        pygame.display.flip()
+        c_state = init(sim_count)
+        c_state.state.print()
+
+        while running:
+            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            text = 'Ruch kóz'
+            textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
+            textGoatsDeployed = 'Rozstawione kozy: ' + str(c_state.state.addedGoats)
+            textGoats = 'Kozy na planszy: ' + str(c_state.state.addedGoats - c_state.state.lostGoats)
+            textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
+            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            updateScreen(c_state.state.board, self.board, self.screen)
+            pygame.display.flip()
+
+            state_copy = c_state.state
+
+            board_state = GameState(state=state_copy, next_to_move=-1)
+            root = MonteCarloTreeSearchNode(state=board_state, parent=None)
+            mcts = MonteCarloTreeSearch(root)
+
+            best_node = mcts.best_action(sim_count)
+            c_state = best_node.state
+            c_state.state.print()
+            updateScreen(c_state.state.board, self.board, self.screen)
+            pygame.display.flip()
+
+            if judge(c_state)==1:
+                break
+            elif judge(c_state)==-1:
+                continue
+
+            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            text = 'Ruch tygrysów'
+            textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
+            textGoatsDeployed = 'Rozstawione kozy: ' + str(c_state.state.addedGoats)
+            textGoats = 'Kozy na planszy: ' + str(c_state.state.addedGoats - c_state.state.lostGoats)
+            textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
+            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            pygame.display.flip()
+
+            board_state = GameState(state=state_copy, next_to_move=1)
+            root = MonteCarloTreeSearchNode(state=board_state, parent=None)
+            mcts = MonteCarloTreeSearch(root)
+
+            best_node = mcts.best_action(sim_count)
+            c_state = best_node.state
+            c_state.state.print()
+            updateScreen(c_state.state.board, self.board, self.screen)
+            pygame.display.flip()
+            
+            if judge(c_state)==1:
+                break
+            elif judge(c_state)==-1:
+                continue
+
+            pygame.display.flip()
+
+        pygame.quit()
+        menu.show()

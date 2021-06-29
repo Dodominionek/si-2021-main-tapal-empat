@@ -1,5 +1,5 @@
 from pvpgame import Board, PVPGame
-from pvegame import PVTGame
+from pvegame import PVTGame, BVBGame
 from tkinter import Widget
 import pygame
 
@@ -41,6 +41,11 @@ class Okno(QMainWindow):
         self.pvtigerButton.setFont(QFont('Impact',20))
         self.pvtigerButton.clicked.connect(self.playerVsTiger)
 
+        self.bvbButton = QPushButton()
+        self.bvbButton.setText("Bot vs Bot")
+        self.bvbButton.setFont(QFont('Impact',20))
+        self.bvbButton.clicked.connect(self.bvb)
+
         self.simulationsText = QLabel()
         self.simulationsText.setText("Simulations Number")
         self.simulationsText.setAlignment(Qt.AlignCenter)
@@ -60,6 +65,8 @@ class Okno(QMainWindow):
         mainMenu.addWidget(self.pvpButton)
         mainMenu.addWidget(blankSpace)
         mainMenu.addWidget(self.pvtigerButton)
+        mainMenu.addWidget(blankSpace)
+        mainMenu.addWidget(self.bvbButton)
         mainMenu.addWidget(blankSpace)
         mainMenu.addWidget(self.simulationsText)
         mainMenu.addWidget(self.simulationsField)
@@ -88,6 +95,16 @@ class Okno(QMainWindow):
         screen = pygame.display.set_mode([1500, 1000])
         simulations_number = int(self.simulationsField.text())
         pvt = PVTGame(self, simulations_number)
+
+    def bvb(self):
+        self.hide()
+        pygame.init()
+        pygame.font.init()
+        myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+        screen = pygame.display.set_mode([1500, 1000])
+        simulations_number = int(self.simulationsField.text())
+        pvt = BVBGame(self, simulations_number)
 
 app = QApplication(sys.argv)
 
