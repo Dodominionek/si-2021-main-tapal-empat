@@ -27,12 +27,12 @@ class GameState(object):
     @property
     def game_result(self):
         status = self.state.check_status()
-        if status == 2:
-            return 2.
+        if status == -1:
+            return -1.
         elif status == 1:
             return 1.
         else:
-            return 0
+            return None
 
     def is_game_over(self):
         return self.game_result
@@ -45,6 +45,8 @@ class GameState(object):
                 
     def move(self, move):
         new_state = copy.deepcopy(self.state)
+        if self.state.leftGoats == 0:
+            self.state.addingGoats = False
         #rozstawianie
         if self.state.addingTigers > 0:
             new_state, succed = self.state.add_tiger(new_state, move.pos_to[0], move.pos_to[1])
@@ -78,11 +80,11 @@ class GameState(object):
         if self.next_to_move == GameState.P1:
             #tygrysy, sprawdź, czy rozstawiają
             if self.state.addingTigers > 0:
-                return self.state.getPossibleTigerPlaces(self.state.board)
+                return self.state.getPossibleTigerPlaces(self.state)
             else:
                 return self.state.get_all_possible_moves_tiger(self.state)
         else:
             if self.state.leftGoats > 0:
-                return self.state.getPossibleGoatPlaces(self.state.board)
+                return self.state.getPossibleGoatPlaces(self.state)
             else:
                 return self.state.get_all_possible_moves_goat(self.state)

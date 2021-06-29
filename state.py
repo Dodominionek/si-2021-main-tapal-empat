@@ -79,7 +79,6 @@ class State(object):
     def __init__(self):
         self.addingTigers = 2
         self.addingGoats = False
-        self.currentPlayer = -1
         self.addedGoats = 0
         self.leftGoats = 18
         self.lostGoats = 0
@@ -92,15 +91,16 @@ class State(object):
             [0,0,0,0,0],
             [0,0,0,0,0],
         ]
+        
 
-    def check_move_tiger(self, board, posX, posY, destX, destY):
+    def check_move_tiger(self, board, posY, posX, destY, destX):
         possible_move = False
         for capture_move in self.capture_connections[posX * 5 + posY]:
             if capture_move == destX * 5 + destY and board[destY][destX] == 0 and board[int((destY + posY) / 2)][int((destX + posX) / 2)] == 2:
                 possible_move = True
 
         for normal_move in self.move_tigers_connections[posX * 5 + posY]:
-            if normal_move == destX * 5 + destY and board[destY][destX] == 0 and self.checkRoad(board, posY, posX, destY, destX) == True:
+            if (normal_move == destX * 5 + destY) and (board[destY][destX] == 0) and (self.checkRoad(board, posX, posY, destX, destY) == True):
                 possible_move = True
 
         return possible_move
@@ -183,19 +183,19 @@ class State(object):
                             possible.append(GameMove(2, y, x, move[0], move[1]))
         return possible
 
-    def getPossibleGoatPlaces(self, board):
+    def getPossibleGoatPlaces(self, state):
         possibleGoatPlaces = []
         for x in range(5):
             for y in range(5):
-                if board[y][x] == 0:
+                if state.board[y][x] == 0:
                     possibleGoatPlaces.append(GameMove(2, y, x, y, x))
         return possibleGoatPlaces
 
-    def getPossibleTigerPlaces(self, board):
+    def getPossibleTigerPlaces(self, state):
         possibleTigerPlaces = []
         for x in range(5):
             for y in range(5):
-                if board[y][x] == 0 and x > 0 and y > 0 and x < 4 and y < 4:
+                if state.board[y][x] == 0 and x > 0 and y > 0 and x < 4 and y < 4:
                     possibleTigerPlaces.append(GameMove(1, y, x, y, x))
         return possibleTigerPlaces
 
@@ -205,7 +205,7 @@ class State(object):
                 for y in range(5):
                     if self.board[y][x] == 1:
                         for neighbour in self.block_checker[x * 5 + y]:
-                            if self.board[int(neighbour / 5)][int(neighbour % 5)] == 0:
+                            if self.board[int(neighbour % 5)][int(neighbour / 5)] == 0:
                                 return False
             return True   
         else:
@@ -213,26 +213,11 @@ class State(object):
 
     def check_status(self):
         if self.checkIfTigersBlocked():
-            return 1
-        elif self.lostGoats >= 8:
             return -1
+        elif self.lostGoats >= 8:
+            return 1
         else:
-            return 0
-
-    @property
-    def game_result(self):
-        # check if game is over
-        status = self.board.checkStatus()
-        if status == 1:
-            return 1.
-        elif status == -1:
-            return -1.
-        else:
-            # if not over - no result
             return None
-
-    def is_game_over(self):
-        return self.game_result is not None 
 
     def move_tiger(self, state, posY, posX, destY, destX):
         for capture_move in self.capture_connections[posX * 5 + posY]:
@@ -284,3 +269,5 @@ class State(object):
         print("__|0  1  2  3  4")
         for i in range(5):
             print(str(i)+" "+str(self.board[i]))
+
+
