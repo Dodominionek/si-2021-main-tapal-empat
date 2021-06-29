@@ -65,7 +65,6 @@ class Okno(QMainWindow):
         mainMenu.addWidget(self.pvpButton)
         mainMenu.addWidget(blankSpace)
         mainMenu.addWidget(self.pvtigerButton)
-        mainMenu.addWidget(blankSpace)
         mainMenu.addWidget(self.bvbButton)
         mainMenu.addWidget(blankSpace)
         mainMenu.addWidget(self.simulationsText)

@@ -332,8 +332,6 @@ class BVBGame():
 
             if judge(c_state)==1:
                 break
-            elif judge(c_state)==-1:
-                continue
 
             clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
             text = 'Ruch tygrysów'
@@ -343,6 +341,8 @@ class BVBGame():
             textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
             writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
             pygame.display.flip()
+
+            state_copy = c_state.state
 
             board_state = GameState(state=state_copy, next_to_move=1)
             root = MonteCarloTreeSearchNode(state=board_state, parent=None)
