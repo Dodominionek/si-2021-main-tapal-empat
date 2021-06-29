@@ -52,7 +52,7 @@ class Okno(QMainWindow):
         self.simulationsText.setFont(QFont('Impact',20))
 
         self.simulationsField = QLineEdit()
-        self.simulationsField.setText("100")
+        self.simulationsField.setText("150")
         self.simulationsField.setFixedWidth(520)
         self.simulationsField.setAlignment(Qt.AlignCenter)
         self.simulationsField.setFont(QFont('Impact',20))
@@ -80,30 +80,25 @@ class Okno(QMainWindow):
         self.hide()
         pygame.init()
         pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-        screen = pygame.display.set_mode([1500, 1000])
         pvp = PVPGame(self)
 
     def playerVsTiger(self):
         self.hide()
         pygame.init()
         pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-        screen = pygame.display.set_mode([1500, 1000])
         simulations_number = int(self.simulationsField.text())
         pvt = PVTGame(self, simulations_number)
 
     def bvb(self):
-        self.hide()
-        pygame.init()
-        pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-        screen = pygame.display.set_mode([1500, 1000])
         simulations_number = int(self.simulationsField.text())
-        pvt = BVBGame(self, simulations_number)
+        if simulations_number < 150:
+            self.simulationsField.setText('')
+            self.simulationsField.setPlaceholderText('Minimum 150')
+        else:
+            self.hide()
+            pygame.init()
+            pygame.font.init()
+            bvb = BVBGame(self, simulations_number)
 
 app = QApplication(sys.argv)
 
