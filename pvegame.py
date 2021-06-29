@@ -16,7 +16,7 @@ from pygame.scrap import lost, put
 running = None
 myfont = None
 
-def init(sim_count):
+def init(sim_count, board, screen):
     state = State()
     initial_board_state = GameState(state=state, next_to_move=1)
 
@@ -27,6 +27,8 @@ def init(sim_count):
     best_node = mcts.best_action(sim_count)
     c_state = best_node.state
     state_copy = c_state.state
+
+    updateScreen(c_state.state.board, board, screen)
 
     board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
@@ -211,7 +213,7 @@ class PVTGame():
         clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
         writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
         pygame.display.flip()
-        c_state = init(sim_count)
+        c_state = init(sim_count, self.board, self.screen)
         c_state.state.print()
 
         while running:
@@ -304,15 +306,19 @@ class BVBGame():
         clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
         writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
         pygame.display.flip()
-        c_state = init(sim_count)
+        c_state = init(sim_count, self.board, self.screen)
         c_state.state.print()
 
         while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
             clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
             text = 'Ruch kóz'
             textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
-            textGoatsDeployed = 'Rozstawione kozy: ' + str(c_state.state.addedGoats)
-            textGoats = 'Kozy na planszy: ' + str(c_state.state.addedGoats - c_state.state.lostGoats)
+            textGoatsDeployed = 'Rozstawione kozy: ' + str(18 - c_state.state.leftGoats)
+            textGoats = 'Kozy na planszy: ' + str(18 - c_state.state.leftGoats - c_state.state.lostGoats)
             textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
             writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
             updateScreen(c_state.state.board, self.board, self.screen)
@@ -336,8 +342,8 @@ class BVBGame():
             clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
             text = 'Ruch tygrysów'
             textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
-            textGoatsDeployed = 'Rozstawione kozy: ' + str(c_state.state.addedGoats)
-            textGoats = 'Kozy na planszy: ' + str(c_state.state.addedGoats - c_state.state.lostGoats)
+            textGoatsDeployed = 'Rozstawione kozy: ' + str(18 - c_state.state.leftGoats)
+            textGoats = 'Kozy na planszy: ' + str(18 - c_state.state.leftGoats - c_state.state.lostGoats)
             textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
             writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
             pygame.display.flip()
