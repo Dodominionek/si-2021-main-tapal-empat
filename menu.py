@@ -80,9 +80,6 @@ class Okno(QMainWindow):
         self.hide()
         pygame.init()
         pygame.font.init()
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-        screen = pygame.display.set_mode([1500, 1000])
         pvp = PVPGame(self)
 
     def playerVsTiger(self):
