@@ -359,6 +359,15 @@ class BVBGame():
             c_state.state.print()
             updateScreen(c_state.state.board, self.board, self.screen)
             pygame.display.flip()
+
+            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            text = 'Ruch tygrysów'
+            textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
+            textGoatsDeployed = 'Rozstawione kozy: ' + str(18 - c_state.state.leftGoats)
+            textGoats = 'Kozy na planszy: ' + str(18 - c_state.state.leftGoats - c_state.state.lostGoats)
+            textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
+            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            pygame.display.flip()
             
             if judge(c_state)==1:
                 break

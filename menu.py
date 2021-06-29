@@ -52,7 +52,7 @@ class Okno(QMainWindow):
         self.simulationsText.setFont(QFont('Impact',20))
 
         self.simulationsField = QLineEdit()
-        self.simulationsField.setText("200")
+        self.simulationsField.setText("300")
         self.simulationsField.setFixedWidth(520)
         self.simulationsField.setAlignment(Qt.AlignCenter)
         self.simulationsField.setFont(QFont('Impact',20))
@@ -91,9 +91,9 @@ class Okno(QMainWindow):
 
     def bvb(self):
         simulations_number = int(self.simulationsField.text())
-        if simulations_number < 1:
+        if simulations_number < 300:
             self.simulationsField.setText('')
-            self.simulationsField.setPlaceholderText('Minimum 200')
+            self.simulationsField.setPlaceholderText('Minimum 300')
         else:
             self.hide()
             pygame.init()
