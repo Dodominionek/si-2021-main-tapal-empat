@@ -15,9 +15,9 @@ import sys, tkinter
 root = tkinter.Tk()
 root.withdraw()
 
-class Okno(QMainWindow):
+class Window(QMainWindow):
     def __init__(self,*args,**kwargs):
-        super(Okno,self).__init__(*args,**kwargs) 
+        super(Window,self).__init__(*args,**kwargs) 
         self.setWindowTitle("Main Tapal Empat")
         self.setFixedWidth(1200)
         self.setFixedHeight(600)
@@ -26,28 +26,28 @@ class Okno(QMainWindow):
         blankSpace.setFont(QFont('Impact',32))
 
         titletext = QLabel()
-        titletext.setText("Main Tapal Empat Game")
+        titletext.setText("Gra Main Tapal Empat")
         titletext.setAlignment(Qt.AlignCenter)
         titletext.setFont(QFont('Impact',32))
         titletext.setStyleSheet("QLabel { color: black; }")
 
         self.pvpButton = QPushButton()
-        self.pvpButton.setText("Player vs Player")
+        self.pvpButton.setText("Gracz kontra gracz")
         self.pvpButton.setFont(QFont('Impact',20))
         self.pvpButton.clicked.connect(self.playerVsPlayer)
 
         self.pvtigerButton = QPushButton()
-        self.pvtigerButton.setText("Player vs Tiger Bot")
+        self.pvtigerButton.setText("Gracz kontra bot tygrysów")
         self.pvtigerButton.setFont(QFont('Impact',20))
         self.pvtigerButton.clicked.connect(self.playerVsTiger)
 
         self.bvbButton = QPushButton()
-        self.bvbButton.setText("Bot vs Bot")
+        self.bvbButton.setText("Bot kontra bot")
         self.bvbButton.setFont(QFont('Impact',20))
         self.bvbButton.clicked.connect(self.bvb)
 
         self.simulationsText = QLabel()
-        self.simulationsText.setText("Simulations Number")
+        self.simulationsText.setText("Liczba symulacji")
         self.simulationsText.setAlignment(Qt.AlignCenter)
         self.simulationsText.setFont(QFont('Impact',20))
 
@@ -102,7 +102,7 @@ class Okno(QMainWindow):
 
 app = QApplication(sys.argv)
 
-window = Okno()
+window = Window()
 window.setStyleSheet("background-color: rgb(245,245,220);")
 window.show()
 
