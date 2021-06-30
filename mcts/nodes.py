@@ -1,6 +1,7 @@
 from copy import Error
 import math
 import numpy as np
+import random
 from collections import defaultdict
 from state import GameState
 from game import *
@@ -18,6 +19,7 @@ class MonteCarloTreeSearchNode(object):
     def untried_actions(self):
         if not hasattr(self, '_untried_actions'):
             self._untried_actions = self.state.get_legal_actions()
+            random.shuffle(self._untried_actions)
         return self._untried_actions
 
     @property

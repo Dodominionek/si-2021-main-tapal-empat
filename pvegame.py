@@ -88,6 +88,11 @@ def get_action(state, screen):
         move = -1
     if move == -1:
         print("invalid move")
+        if(state.state.board[y][x]==1):
+            pygame.draw.circle(screen, 'orange', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
+        elif(state.state.board[y][x]==2):
+            pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
+        pygame.display.flip()
         move = get_action(state)
     return move
 
