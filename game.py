@@ -47,7 +47,6 @@ class GameState(object):
         new_state = copy.deepcopy(self.state)
         if self.state.leftGoats == 0:
             self.state.addingGoats = False
-        #rozstawianie
         if self.state.addingTigers > 0:
             new_state, succed = self.state.add_tiger(new_state, move.pos_to[0], move.pos_to[1])
             if not succed:
@@ -78,7 +77,6 @@ class GameState(object):
 
     def get_legal_actions(self):
         if self.next_to_move == GameState.P1:
-            #tygrysy, sprawdź, czy rozstawiają
             if self.state.addingTigers > 0:
                 return self.state.getPossibleTigerPlaces(self.state)
             else:

@@ -30,6 +30,7 @@ def init(sim_count, board, screen):
     state_copy = c_state.state
 
     updateScreen(c_state.state.board, board, screen)
+    pygame.display.flip()
 
     board_state = GameState(state=state_copy, next_to_move=1)
     root = MonteCarloTreeSearchNode(state=board_state, parent=None)
@@ -153,7 +154,6 @@ class Field:
 def clearText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
     bigfont = pygame.font.SysFont('Comic Sans MS', 50)
     textsurface = bigfont.render(text, False, (255, 255, 255))
-    # screen.blit(textsurface,(0,0))
     screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (255, 255, 255))
     screen.blit(textGoatsLeftSurface,(1000,100))
@@ -167,7 +167,6 @@ def clearText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats,
 def writeText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
     bigfont = pygame.font.SysFont('Comic Sans MS', 50)
     textsurface = bigfont.render(text, False, (0, 0, 0))
-    # screen.blit(textsurface,(0,0))
     screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (0, 0, 0))
     screen.blit(textGoatsLeftSurface,(1000,100))
@@ -241,7 +240,6 @@ class PVTGame():
                     pygame.quit()
                     self.menu.show()
                     self.quit = False
-        # c_state = init(sim_count, self.board, self.screen)
         if self.quit == True:
             c_state = self.initState
             c_state.state.print()
@@ -389,7 +387,6 @@ class BVBGame():
                     pygame.quit()
                     self.menu.show()
                     self.quit = False
-        # c_state = init(sim_count, self.board, self.screen)
         if self.quit == True:
             c_state = self.initState
             c_state.state.print()

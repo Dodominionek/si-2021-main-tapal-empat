@@ -222,7 +222,6 @@ class State(object):
     def move_tiger(self, state, posY, posX, destY, destX):
         for capture_move in self.capture_connections[posX * 5 + posY]:
             if capture_move == destX * 5 + destY and state.board[destY][destX] == 0 and state.board[int((destY + posY) / 2)][int((destX + posX) / 2)] == 2:
-                #zbijanie kozy
                 state.board[posY][posX] = 0
                 state.board[int((destY + posY) / 2)][int((destX + posX) / 2)] = 0
                 state.addedGoats-=1
@@ -231,7 +230,6 @@ class State(object):
 
         for normal_move in self.move_tigers_connections[posX * 5 + posY]:
             if normal_move == destX * 5 + destY and state.board[destY][destX] == 0 and self.checkRoad(state.board, posX, posY, destX, destY) == True: 
-                #tylko przesunięcie       
                 state.board[posY][posX] = 0
                 state.board[destY][destX] = 1
         return state
@@ -239,14 +237,12 @@ class State(object):
     def move_goat(self, state, posY, posX, destY, destX):
         for normal_move in self.move_goats_connections[posX * 5 + posY]:
             if normal_move == destX * 5 + destY and state.board[destY][destX] == 0:
-                #tylko przesunięcie       
                 state.board[posY][posX] = 0
                 state.board[destY][destX] = 2
         return state
 
     def add_tiger(self, state, posY, posX):
         if state.addingTigers > 0:
-            #stawianie      
             if state.board[posY][posX] == 0:
                 state.board[posY][posX] = 1
                 state.addingTigers -= 1
@@ -257,7 +253,6 @@ class State(object):
 
     def add_goat(self, state, posY, posX):
         if state.addingGoats == True:
-            #stawianie      
             if state.board[posY][posX] == 0:
                 state.board[posY][posX] = 2
                 state.addedGoats += 1
