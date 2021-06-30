@@ -243,6 +243,11 @@ class PVTGame():
         if self.quit == True:
             c_state = self.initState
             c_state.state.print()
+            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            text = 'Ruch kóz'
+            updateScreen(c_state.state.board, self.board, self.screen)
+            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+            pygame.display.flip()
 
             while self.running:
                 for event in pygame.event.get():
