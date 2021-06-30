@@ -40,63 +40,6 @@ def init(sim_count, board, screen):
 
     return c_state
 
-def get_action(state, screen):
-    try:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = pygame.mouse.get_pos()
-                x = x + 50
-                y = y + 50
-                if x > 100 and x < 1100 and y > 100 and y < 1100:
-                    xToDraw = x
-                    yToDraw = y
-                    x = math.floor(x / 200)
-                    y = math.floor(y / 200)
-                    if state.state.addingGoats:
-                        if state.state.board[y][x] == 0:
-                            move = GameMove(2, y, x, y, x)
-                        else:
-                            raise(Exception)
-                    else:
-                        if state.state.board[y][x] == 2:
-                            pygame.draw.circle(screen, 'green', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
-                            pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 28)
-                            pygame.display.flip()
-                            noCoords = True
-                            while noCoords:
-                                for event in pygame.event.get():
-                                    if event.type == pygame.MOUSEBUTTONDOWN:
-                                        xTo, yTo = pygame.mouse.get_pos()
-                                        xTo = xTo + 50
-                                        yTo = yTo + 50
-                                        if xTo > 100 and xTo < 1100 and yTo > 100 and yTo < 1100:
-                                            xTo = math.floor(xTo / 200)
-                                            yTo = math.floor(yTo / 200)
-                                            if state.state.board[yTo][xTo] == 0:
-                                                pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
-                                                move = GameMove(2, y, x, yTo, xTo)
-                                                noCoords = False
-                                            else:
-                                                raise(Exception)
-                                        else:
-                                            raise(Exception)
-                        else:
-                            raise(Exception)
-    except Exception as e:
-        move = -1
-    if move == -1:
-        print("invalid move")
-        if(state.state.board[y][x]==1):
-            pygame.draw.circle(screen, 'orange', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
-        elif(state.state.board[y][x]==2):
-            pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
-        pygame.display.flip()
-        move = get_action(state)
-    return move
-
-
 def judge(state):
     if state.is_game_over() != None:
         if state.game_result == 1.0:
@@ -213,6 +156,70 @@ class PVTGame():
     def initialise(self, sim_count):
         self.initState = init(sim_count, self.board, self.screen)
 
+    def get_action(self, state, screen):
+        try:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    pygame.quit()
+                    self.menu.show()
+                    raise(Exception)
+                        
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = pygame.mouse.get_pos()
+                    x = x + 50
+                    y = y + 50
+                    if x > 100 and x < 1100 and y > 100 and y < 1100:
+                        xToDraw = x
+                        yToDraw = y
+                        x = math.floor(x / 200)
+                        y = math.floor(y / 200)
+                        if (math.floor(xToDraw / 100) * 100) % 200 == 0 or (math.floor(yToDraw / 100) * 100) % 200 == 0:
+                                raise(Exception)
+                        if state.state.addingGoats:
+                            if state.state.board[y][x] == 0:
+                                move = GameMove(2, y, x, y, x)
+                            else:
+                                raise(Exception)
+                        else:
+                            if state.state.board[y][x] == 2:
+                                pygame.draw.circle(screen, 'green', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
+                                pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 28)
+                                pygame.display.flip()
+                                noCoords = True
+                                while noCoords:
+                                    for event in pygame.event.get():
+                                        if event.type == pygame.MOUSEBUTTONDOWN:
+                                            xTo, yTo = pygame.mouse.get_pos()
+                                            xTo = xTo + 50
+                                            yTo = yTo + 50
+                                            if xTo > 100 and xTo < 1100 and yTo > 100 and yTo < 1100:
+                                                xTo = math.floor(xTo / 200)
+                                                yTo = math.floor(yTo / 200)
+                                                if state.state.board[yTo][xTo] == 0:
+                                                    pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
+                                                    move = GameMove(2, y, x, yTo, xTo)
+                                                    noCoords = False
+                                                else:
+                                                    raise(Exception)
+                                            else:
+                                                raise(Exception)
+                            else:
+                                raise(Exception)
+        except Exception as e:
+            if self.running == False:
+                self.quit = False
+                return None
+            move = -1
+        if move == -1:
+            print("invalid move")
+            if (math.floor(xToDraw / 100) * 100) % 200 != 0 and (math.floor(yToDraw / 100) * 100) % 200 != 0:
+                if(state.state.board[y][x]==2):
+                    pygame.draw.circle(screen, 'gray', [math.floor(xToDraw / 100) * 100, math.floor(yToDraw / 100) * 100], 30)
+            pygame.display.flip()
+            move = self.get_action(state)
+        return move
+
     def __init__(self, menu, sim_count):
         self.menu = menu
         self.best_node = None
@@ -264,46 +271,48 @@ class PVTGame():
                 while check == True:
                     check = False
                     try:
-                        move1 = get_action(c_state, self.screen)
-                        c_state = c_state.move(move1)
+                        move1 = self.get_action(c_state, self.screen)
+                        if self.running == True:
+                            c_state = c_state.move(move1)
                     except:
                         check = True
-                c_state.state.print()
-                updateScreen(c_state.state.board, self.board, self.screen)
-                pygame.display.flip()
-                
-                if judge(c_state) == 1:
-                    break
+                if self.running == True:
+                    c_state.state.print()
+                    updateScreen(c_state.state.board, self.board, self.screen)
+                    pygame.display.flip()
+                    
+                    if judge(c_state) == 1:
+                        break
 
-                clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
-                text = 'Ruch tygrysów'
-                textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
-                textGoatsDeployed = 'Rozstawione kozy: ' + str(c_state.state.addedGoats)
-                textGoats = 'Kozy na planszy: ' + str(c_state.state.addedGoats - c_state.state.lostGoats)
-                textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
-                writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
-                pygame.display.flip()
+                    clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                    text = 'Ruch tygrysów'
+                    textGoatsLeft = 'Pozostałe kozy: ' + str(c_state.state.leftGoats)
+                    textGoatsDeployed = 'Rozstawione kozy: ' + str(c_state.state.addedGoats)
+                    textGoats = 'Kozy na planszy: ' + str(c_state.state.addedGoats - c_state.state.lostGoats)
+                    textGoatsLost  = 'Utracone kozy: ' + str(c_state.state.lostGoats)
+                    writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                    pygame.display.flip()
 
-                state_copy = c_state.state
+                    state_copy = c_state.state
 
-                board_state = GameState(state=state_copy, next_to_move=1)
-                root = MonteCarloTreeSearchNode(state=board_state, parent=None)
-                mcts = MonteCarloTreeSearch(root)
+                    board_state = GameState(state=state_copy, next_to_move=1)
+                    root = MonteCarloTreeSearchNode(state=board_state, parent=None)
+                    mcts = MonteCarloTreeSearch(root)
 
-                # best_node = mcts.best_action(sim_count)
-                sim_thread = threading.Thread(target=self.mctsBestNode, args = (mcts, sim_count))
-                sim_thread.start()
-                while sim_thread.is_alive() and self.running:
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
-                            text = 'Zamykanie'
-                            writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
-                            pygame.display.flip()
-                            sim_thread.join()
-                            self.running = False
-                            pygame.quit()
-                            self.menu.show()
+                    # best_node = mcts.best_action(sim_count)
+                    sim_thread = threading.Thread(target=self.mctsBestNode, args = (mcts, sim_count))
+                    sim_thread.start()
+                    while sim_thread.is_alive() and self.running:
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                                text = 'Zamykanie'
+                                writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                                pygame.display.flip()
+                                sim_thread.join()
+                                self.running = False
+                                pygame.quit()
+                                self.menu.show()
 
                 if self.running == True:
                     c_state = self.best_node.state
