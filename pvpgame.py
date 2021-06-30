@@ -184,7 +184,6 @@ class Tiger:
 
                     destX = math.floor((mouseX) / 100) * 100
                     destY = math.floor((mouseY) / 100) * 100
-                    # Sprawdza połączenia
                     for connection in move_tigers_connections[math.floor(tigerX / 200) * 5 + math.floor(tigerY / 200)]:
                         if connection == math.floor(mouseX / 200) * 5 + math.floor(mouseY / 200) and board.fields[math.floor(destY / 200)][math.floor(destX / 200)] == 0 and (destX % 200 != 0 and destY % 200 != 0):
                             if checkRoad(destX, destY, tigerX, tigerY, board) == True:
@@ -262,7 +261,6 @@ def checkIfTigersBlocked(board):
 def clearText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
     bigfont = pygame.font.SysFont('Comic Sans MS', 50)
     textsurface = bigfont.render(text, False, (255, 255, 255))
-    # screen.blit(textsurface,(0,0))
     screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (255, 255, 255))
     screen.blit(textGoatsLeftSurface,(1000,100))
@@ -276,7 +274,6 @@ def clearText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats,
 def writeText(screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost):
     bigfont = pygame.font.SysFont('Comic Sans MS', 50)
     textsurface = bigfont.render(text, False, (0, 0, 0))
-    # screen.blit(textsurface,(0,0))
     screen.blit(textsurface,(1000,450))
     textGoatsLeftSurface = myfont.render(textGoatsLeft, False, (0, 0, 0))
     screen.blit(textGoatsLeftSurface,(1000,100))
