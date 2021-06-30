@@ -4,14 +4,6 @@ import math
 
 from pygame.scrap import lost, put
 
-empty = [
-    [0,0,0,0,0],
-    [0,0,0,0,0],
-    [0,0,0,0,0],
-    [0,0,0,0,0],
-    [0,0,0,0,0],
-] 
-
 move_goats_connections = {
     0: [1, 5, 6], 1: [2, 0, 6], 2: [3, 1, 7, 6, 8], 3: [4, 2, 8], 4: [3, 9, 8],
     5: [6, 10, 0], 6: [7, 5, 11, 1, 10, 2, 12, 0], 7: [8, 6, 12, 2], 8: [9, 7, 13, 3, 12, 4, 14, 2], 9: [8, 14, 4],
@@ -92,7 +84,13 @@ class Board:
         self.tigers = []
         self.goats = []
         self.fieldsRows = []
-        self.fields = empty
+        self.fields = [
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+        ] 
 
     def prepareBoard(self, screen):
         for z in range(5):
@@ -112,7 +110,13 @@ class Board:
             self.fieldsRows.append(row)
 
     def updateBoard(self, screen):
-        self.fields = empty
+        self.fields = [
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+            [0,0,0,0,0],
+        ] 
         for tiger in self.tigers:
             pygame.draw.circle(screen, 'orange', [tiger.x, tiger.y], 30)
             self.fields[math.floor(tiger.y / 200)][math.floor(tiger.x / 200)] = 1
@@ -332,6 +336,16 @@ class PVPGame():
                         addingGoats = True
 
                 if event.type == pygame.QUIT:
+                    self.board.fields = [
+                        [0,0,0,0,0],
+                        [0,0,0,0,0],
+                        [0,0,0,0,0],
+                        [0,0,0,0,0],
+                        [0,0,0,0,0],
+                    ]
+                    self.board.tigers = []
+                    self.board.goats = []
+                    self.board.fieldsRows = []
                     running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -350,6 +364,11 @@ class PVPGame():
                                             text = 'Tygrysy rozstawiły ' + str(len(self.board.tigers) + 1)
                                             self.board.tigers.append(Tiger(math.floor(x / 100) * 100, math.floor(y / 100) * 100))
                                             pygame.draw.circle(self.screen, color, [math.floor(x / 100) * 100, math.floor(y / 100) * 100], 30)
+                                            if len(self.board.tigers) == 2:
+                                                clearText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                                                text = 'Kozy rozstawiają'
+                                                writeText(self.screen, myfont, text, textGoatsLeft, textGoatsDeployed, textGoats, textGoatsLost)
+                                                pygame.display.flip()
                                         elif tigersMove == True:
                                             for tiger in self.board.tigers:
                                                 if math.floor(x / 100) * 100 == tiger.x and math.floor(y / 100) * 100 == tiger.y:
@@ -362,11 +381,14 @@ class PVPGame():
 
                                                     tiger.makeMove(tiger.x, tiger.y, self.board, self.screen)
                                                     print('Tygrysy zrobiły ruch')
-                                                    text = 'Tygrysy zrobiły ruch'
+                                                    if addedGoats == 18:
+                                                        text = 'Ruch kóz'
+                                                    else:
+                                                        text = 'Kozy rozstawiają'
                                                     tigersMove = False
                                         elif addingGoats == True and self.board.fields[math.floor(y / 200)][math.floor(x / 200)] == 0:
                                             print('Kozy rozstawiły')
-                                            text = 'Kozy rozstawiły '
+                                            text = 'Ruch tygrysów'
                                             self.board.goats.append(Goat(math.floor(x / 100) * 100, math.floor(y / 100) * 100))
                                             pygame.draw.circle(self.screen, color, [math.floor(x / 100) * 100, math.floor(y / 100) * 100], 30)
                                             if len(self.board.goats) >= 1 :
@@ -386,7 +408,7 @@ class PVPGame():
 
                                                     goat.makeMove(goat.x, goat.y, self.board, self.screen)
                                                     print('Kozy zrobiły ruch')
-                                                    text = 'Kozy zrobiły ruch'
+                                                    text = 'Ruch tygrysów'
                                                     tigersMove = True
                         self.board.updateBoard(self.screen)
                         for row in self.board.fields:
@@ -398,9 +420,29 @@ class PVPGame():
                     if (addedGoats - len(self.board.goats)) >= 8:
                         text = 'Tygrysy wygraly!'
                         ended = True
+                        self.board.fields = [
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                        ] 
+                        self.board.tigers = []
+                        self.board.goats = []
+                        self.board.fieldsRows = []
                     if checkIfTigersBlocked(self.board) == True and len(self.board.tigers) == 2:
                         text = 'Kozy wygraly!'
                         ended = True
+                        self.board.fields = [
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                            [0,0,0,0,0],
+                        ] 
+                        self.board.tigers = []
+                        self.board.goats = []
+                        self.board.fieldsRows = []
 
             pygame.display.flip()
 
