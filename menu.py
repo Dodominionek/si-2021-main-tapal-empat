@@ -83,11 +83,15 @@ class Window(QMainWindow):
         pvp = PVPGame(self)
 
     def playerVsTiger(self):
-        self.hide()
-        pygame.init()
-        pygame.font.init()
         simulations_number = int(self.simulationsField.text())
-        pvt = PVTGame(self, simulations_number)
+        if simulations_number < 1:
+            self.simulationsField.setText('')
+            self.simulationsField.setPlaceholderText('Minimum 1')
+        else:
+            self.hide()
+            pygame.init()
+            pygame.font.init()
+            pvt = PVTGame(self, simulations_number)
 
     def bvb(self):
         simulations_number = int(self.simulationsField.text())
